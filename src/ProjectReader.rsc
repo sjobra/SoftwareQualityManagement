@@ -1,49 +1,47 @@
 module ProjectReader
 
 import IO;
+import lang::java::m3::Core;
+import lang::java::m3::AST;
+import lang::java::jdt::m3::Core;
 import util::Resources;
-import Set;
-import Map;
-import List;
 
-private loc project = |project://smallsql/|;
+
+// This module contains all the data that can be used for analysis.
+// - M3 model
+// - All java files with the content of that file (Map)
+// - All methods with there content
 
 // Function to open a project and retrieve the java files of that project
-public set[loc] javaFiles(loc project) 
+public set[loc] getJavaFiles(loc project) 
 {
 	Resource r = getProject(project);	
 	return { a | /file(a) <- r, a.extension == "java" };
 }
 
-// Function to determine if it is descending
-public bool descending(tuple[&a, num] x, tuple[&a, num] y) {
-return x[1] > y[1];
+// From Introductory Assignment 9, obtain all methods and constructors.
+// Creates a relation between java class and the methods / constructors
+public rel[loc, loc] getAllMethods(M3 model)
+{
+	rel[loc, loc] allMethods = { <x,y> | <x,y> <- model.containment
+                       , x.scheme=="java+class"
+                       , y.scheme=="java+method" || y.scheme=="java+constructor" 
+                       };
+	return allMethods;
 }
+
+// Project that needs to be analysed
+public loc project = |project://smallsql/|;
+
+//M3 Model created from project
+public M3 myModel = createM3FromEclipseProject(project);
 
 // Create a set of files to get all the javaFiles from the project. 
-private set[loc] files = javaFiles(project); 
+public set[loc] javaFiles = getJavaFiles(project); 
 
-// This function determines the amount of java files in the project. 
-public void amountOfJavaFiles() 
-{		
-	print("The amount of Java files: ");
-	println(size(files));	
-}
+// Create a map containing filelocation and the content of the file. 
+public map[loc, str] fileWithContent = (location:readFile(location) | location <- javaFiles);
 
-// This function determines the amount of lines per java file
-public void amountOfLines()
-{
-	println("Amount of Lines");
-	map[loc, int] lines = ( file:size(readFileLines(file)) | file <- files );
+// Create a relation between files and methods containing all the methods
+public rel[loc, loc] methods = getAllMethods(myModel);
 
-	for(<file, amountOfLines> <- sort(toList(lines), descending))
-		println("<file.file>: <amountOfLines> lines");
-}
-
-// Print an overview of all the statistics. 
-public void Overview()
-{
-	println("Overview");
-	amountOfJavaFiles();
-	amountOfLines();
-}
