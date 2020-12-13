@@ -22,9 +22,9 @@ public list[str] filterComments(list[str] aMethod) {
 
 public int getTop(int i, int daSize){
 	if(i+5> daSize) {
-		return daSize-i-1;
+		return daSize-i;
 	}
-	return i+5;
+	return 5;
 }
 
 public void duplication() {
