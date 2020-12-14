@@ -12,8 +12,13 @@ import Relation;
 import String;
 
 import ProjectReader;
+//import Duplication;
 
-public list[rel[str, int]] calculateCyclomaticComplexity()
+// To determine everything, alse the lines of Code per unit is needed. 
+// Lines of code needs to be filtered, so without code. 
+
+// Location, Name of function, complexity, loc per Unit
+public list[tuple[loc, str, int]] calculateCyclomaticComplexity()
 {
 	// We need the declarations to know what is happening in a method.
 	// First obtain all the declarations from the java files (Exercise 9)
@@ -22,10 +27,10 @@ public list[rel[str, int]] calculateCyclomaticComplexity()
 	// Now we can get the declarationsPerMethod by looking per file
 	set[Declaration] declarationsPerMethod = { d | /Declaration d := declarationsPerFile, d	is method || d is constructor }; 
 	
-	list[rel[str, int]] result =[];
+	list[tuple[loc, str, int]] result =[];
 	for(Declaration decl <- declarationsPerMethod)
 	{
-		result += {<x,y> | x := decl.name, y:=cyclomaticComplexity(decl)};
+		result += <decl.src, decl.name, cyclomaticComplexity(decl)>;
 	}
 	return result;
 }
@@ -47,4 +52,26 @@ int cyclomaticComplexity(Declaration method) {
    	case \infix(_,"||",_) : result += 1;
   }
   return result;
+}
+
+
+// This function evaluates the amount of functions that belong to which risk. 
+public map[str, int] riskEvalCC(list[tuple[loc, str, int]] CCList)
+{
+	map[str, int] ccInCategory = ( "simple": 0, "more complex" : 0, "complex": 0, "untestable": 0);
+	
+	for( cc <- CCList )
+	{
+		// Iterate through list and find the bin where cc belongs to
+		if (cc[2] > 50)
+			ccInCategory["untestable"] += 1;
+		else if (cc[2] >20)
+			ccInCategory["complex"] += 1;
+		else if (cc[2] >10)
+			ccInCategory["more complex"] += 1;
+		else
+			ccInCategory["simple"] += 1;	
+	}
+	
+	return ccInCategory;
 }
