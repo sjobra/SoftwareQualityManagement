@@ -18,9 +18,8 @@ public void main()
 							
 	CC = calculateCyclomaticComplexity();
 	
-	for( cyclo <- CC)
-	{
-		println(cyclo);
-	}
+	evalMatrix = riskEvalCC(CC);
 	
+	for (<a, b> <- toList(evalMatrix))
+		println("<a>: <b> ");
 }
