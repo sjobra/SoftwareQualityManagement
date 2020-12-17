@@ -40,6 +40,7 @@ public void duplication() {
 			filteredmethods = filteredmethods + filterComments(aMethod);
 		}
 	}
+	int originalSize = size(filteredmethods);
 	println(size(filteredmethods));
 	
 	int daSize = size(filteredmethods);
@@ -81,7 +82,7 @@ public void duplication() {
 				//just removing the list from filteredmethods will remove all occurances. Only need to remove current occurance
 				list[str] bottomPart = slice(filteredmethods, 0, i);				
 				println("total size: " + toString(size(filteredmethods)) + " bottomsize: " + toString(size(bottomPart)) + " duplicated lines: " + toString(detectedDuplicate));
-				println("toppart: " + toString(size(filteredmethods) - (size(bottomPart) + detectedDuplicate)));
+				//println("toppart: " + toString(size(filteredmethods) - (size(bottomPart) + detectedDuplicate)));
 				
 				
 				list [str] topPart = slice(filteredmethods, i + detectedDuplicate, daSize - (size(bottomPart) + detectedDuplicate));
@@ -89,7 +90,7 @@ public void duplication() {
 				daSize = daSize - detectedDuplicate;
 				//just removing the list from filteredmethods will remove all occurances. Only need to remove current occurance
 				//filteredmethods = filteredmethods - toDetect;
-				println(daSize);
+				//println(daSize);
 			} else {
 				i =i+1;
 			}
@@ -101,12 +102,25 @@ public void duplication() {
 		//wat we hebben gehad hoeven we niet te parsen
 		filteredmethods = drop(1, filteredmethods);
 		daSize = daSize - 1;
-		println(duplicatecode);
-		println(daSize);
+		//println(duplicatecode);
+		//println(daSize);
 		
 		//if(iteration==80){
 		//	break;
 		//}
 	}
+	//println(duplicatecode);
+	//println(originalSize);
+	
+	
+	real fracture = toReal(duplicatecode)/toReal(originalSize);
+	//println(fracture);
+	
+	println("duplication: " + toString(toInt(fracture*100)) + "%");
+
+}
+
+public void as(){
+	println("duplication: " + toString(toInt(0.08773170362*100)) + "%");
 
 }
