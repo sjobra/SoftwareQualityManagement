@@ -1,25 +1,39 @@
 module Main
 
 import IO;
-import util::Resources;
-import Set;
-import Map;
-import List;
-import lang::java::m3::AST;
-import lang::java::jdt::m3::Core;
-import Relation;
 
 import ProjectReader;
-import CyclomaticComplexity;
+import LinesOfCode;
+import MethodVolume;
+import Duplication;
 
 public void main()
 {
 	println("Project: smallSQL");
-							
-	CC = calculateCyclomaticComplexity();
+	println("----");	
+	int linesOfCode = getLinesOfCodeProgram();
+	println("lines of code : <linesOfCode>"  );
+	println("number of units: <getTotalAmountOfMethods()>");
+	println("unit size");
+	cuv();
+	println("unit complexity");
+	println("simple");
+	println("moderate");
+	println("high");
+	println("very high");
+	println("duplication:");
+	as();
 	
-	evalMatrix = riskEvalCC(CC);
-	
-	for (<a, b> <- toList(evalMatrix))
-		println("<a>: <b> ");
+	int duplPercentage = getPercentage();
+	//duplication();
+	rankingLOC(linesOfCode);
+	println("unit size score: +");
+	println("unit complexity score: +/-");
+	rankingDuplication(duplPercentage);
+	println("");
+	println("analysability score: +");
+	println("changability score: -");
+	println("testability score: ++");
+	println("");
+	println("overall maintainability score: ++");
 }

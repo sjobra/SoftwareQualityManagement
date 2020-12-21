@@ -1,11 +1,26 @@
 module ProjectReader
 
 import IO;
-import lang::java::m3::Core;
-import lang::java::m3::AST;
 import lang::java::jdt::m3::Core;
+import lang::java::m3::AST;
 import util::Resources;
+import List;
+import Map;
+import Relation;
+import String;
 
+//public list[str] filterComments(list[str] aMethod) {
+//// this regex filters out lines starting with slashes
+//	list[str] noDoc = [ a | a <- aMethod, /^[^\/\/]/ := a ];
+//	nodoc =  [ a | a <- noDoc, /.*[^\s].*/ := a ];
+//	noDoc =  [ a | a <- noDoc, /.*[^\/\*].*/ := a ];
+//	noDoc =  [ a | a <- noDoc, /.*[^\*\/].*/ := a ];
+//	noDoc =  [ a | a <- noDoc, /\s*[^\*].*/ := a];
+//	noDoc = [a |  a <- noDoc, /[^\*]/ := a];
+//	return noDoc;
+//}
+
+public rel[loc, loc] allCommentsInProject() = myModel.documentation;
 
 // This module contains all the data that can be used for analysis.
 // - M3 model
@@ -19,13 +34,19 @@ public set[loc] getJavaFiles(loc project)
 	return { a | /file(a) <- r, a.extension == "java" };
 }
 
+//public set[loc] getJavaMethods(M3 model) = { b | <_,b> <- model.containment,
+//						b.scheme == "java+method" ||
+//						b.scheme == "java+contructor"};
+						
+public set[loc] getJavaMethods(M3 model) = { b | <a,b> <- model.declarations, a in methods(model)};
+
 // From Introductory Assignment 9, obtain all methods and constructors.
 // Creates a relation between java class and the methods / constructors
 public rel[loc, loc] getAllMethods(M3 model)
 {
-	rel[loc, loc] allMethods = { <x,y> | <x,y> <- model.containment
-                       , x.scheme=="java+class"
-                       , y.scheme=="java+method" || y.scheme=="java+constructor" 
+	rel[loc,loc] allMethods = { <x,y> | <x,y> <- model.containment,
+						x.scheme == "java+class",
+                        y.scheme=="java+method" || y.scheme=="java+constructor" 
                        };
 	return allMethods;
 }
@@ -40,8 +61,30 @@ public M3 myModel = createM3FromEclipseProject(project);
 public set[loc] javaFiles = getJavaFiles(project); 
 
 // Create a map containing filelocation and the content of the file. 
-public map[loc, str] fileWithContent = (location:readFile(location) | location <- javaFiles);
+public map[loc, str] getFileAndContent()
+{
+	map[loc, str] fileAndContent = ();
+	for (file <- javaFiles)
+	{	
+		fileAndContent += ( file : readFile(file));
+	}
+	return fileAndContent;
+}
+
+//public map[loc, str] getFileAndContentWithoutComments()
+//{
+//	map[loc, list[str]] fileAndContent = getFileAndContent();
+//	map[loc, list[str]] fileAndContentWithoutComment = ();
+//	
+//	for(<location, content> <- toList(fileAndContent)) 
+//	{
+//		fileAndContentWithoutComment += ( location: filterComments(content));		
+//	}	
+//	return fileAndContentWithoutComment;
+//} 
+
 
 // Create a relation between files and methods containing all the methods
-public rel[loc, loc] methods = getAllMethods(myModel);
+public rel[loc, loc] allMethods = getAllMethods(myModel);
 
+public set[loc] allJavaMethods = getJavaMethods(myModel);

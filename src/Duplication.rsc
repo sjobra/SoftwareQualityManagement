@@ -27,7 +27,7 @@ public int getTop(int i, int daSize){
 	return 5;
 }
 
-public void duplication() {
+public int duplication() {
 	set[loc] allMethods = methods(model);
 	list[str] filteredmethods = [];
 	//allMethods = (x: allMethods[x]  | x <- allMethods,  readFileLines(allMethods[x]) > 4 );
@@ -115,12 +115,29 @@ public void duplication() {
 	
 	real fracture = toReal(duplicatecode)/toReal(originalSize);
 	//println(fracture);
-	
-	println("duplication: " + toString(toInt(fracture*100)) + "%");
-
+	return toInt(fracture*100);
 }
 
 public void as(){
 	println("duplication: " + toString(toInt(0.08773170362*100)) + "%");
 
 }
+
+public void rankingDuplication(int percentage) {
+	if(percentage <= 3)
+		println("duplication score: ++");
+	elseif(percentage > 3 && percentage <= 5)
+		println("duplication score: +");
+	elseif(percentage > 5 && percentage <= 10)
+		println("duplication score: o");
+	elseif(percentage > 10 && percentage <= 20)
+		println("duplication score: -");
+	else println("duplication score: --");
+}
+
+public int getPercentage()
+{
+	return toInt(0.08773170362*100);
+}
+
+

@@ -1,18 +1,14 @@
 module CyclomaticComplexity
 
-import IO;
 import lang::java::m3::Core;
 import lang::java::m3::AST;
 import lang::java::jdt::m3::Core;
 import util::Resources;
-import List;
-import Set;
-import Map;
-import Relation;
-import String;
+
 
 import ProjectReader;
-//import Duplication;
+import LinesOfCode;
+import CommentHandling;
 
 // To determine everything, alse the lines of Code per unit is needed. 
 // Lines of code needs to be filtered, so without code. 
@@ -20,6 +16,11 @@ import ProjectReader;
 // Location, Name of function, complexity, loc per Unit
 public list[tuple[loc, str, int]] calculateCyclomaticComplexity()
 {
+	map[loc,str] methods = getSourceCodeWithoutComments();
+	
+	map[loc, int] linesOfCode = getMethodvsLoc(methods);
+
+
 	// We need the declarations to know what is happening in a method.
 	// First obtain all the declarations from the java files (Exercise 9)
 	set[Declaration] declarationsPerFile = {createAstFromFile(file, false) | file <- getJavaFiles(project)};

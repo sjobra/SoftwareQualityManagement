@@ -57,8 +57,15 @@ public void cuv() {
 		
 	}
 	//println(svm); 
-	println("Simpel methods:" + toString(floor((svm/totalmethods)*100)) + "%"); 
-	println("Normal methods:" + toString(floor((nvm/totalmethods)*100)) + "%"); 
-	println("Complex methods:" + toString(floor((hvm/totalmethods)*100)) + "%"); 
-	println("Very methods:" + toString(floor((cvm/totalmethods)*100)) + "%");
+	println(" * simple: " + toString(floor((svm/totalmethods)*100)) + "%"); 
+	println(" * moderate: " + toString(floor((nvm/totalmethods)*100)) + "%"); 
+	println(" * high: " + toString(floor((hvm/totalmethods)*100)) + "%"); 
+	println(" * very high: " + toString(floor((cvm/totalmethods)*100)) + "%");
+}
+
+public real getTotalAmountOfMethods()
+{
+	set[loc] allMethods = methods(model);
+	return toReal(size(allMethods));
+	
 }
