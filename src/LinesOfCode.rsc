@@ -48,14 +48,14 @@ int linesOfCode = 0;
 	return linesOfCode;	
 }
 
-public void rankingLOC(int linesOfCode) {
+public int rankingLOC(int linesOfCode) {
 	if(linesOfCode <= 66000)
-		println("volume score: ++");
+		return 4;
 	elseif(linesOfCode > 66000 && linesOfCode <= 246000)
-		println("volume score: +");
+		return 3;
 	elseif(linesOfCode > 246000 && linesOfCode <= 665000)
-		println("volume score: o");
+		return 2;
 	elseif(linesOfCode > 665000 && linesOfCode <= 1310000)
-		println("volume score: -");
-	else println("volume score: --");
+		return 1;
+	else return 0;
 }

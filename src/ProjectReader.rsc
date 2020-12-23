@@ -9,17 +9,6 @@ import Map;
 import Relation;
 import String;
 
-//public list[str] filterComments(list[str] aMethod) {
-//// this regex filters out lines starting with slashes
-//	list[str] noDoc = [ a | a <- aMethod, /^[^\/\/]/ := a ];
-//	nodoc =  [ a | a <- noDoc, /.*[^\s].*/ := a ];
-//	noDoc =  [ a | a <- noDoc, /.*[^\/\*].*/ := a ];
-//	noDoc =  [ a | a <- noDoc, /.*[^\*\/].*/ := a ];
-//	noDoc =  [ a | a <- noDoc, /\s*[^\*].*/ := a];
-//	noDoc = [a |  a <- noDoc, /[^\*]/ := a];
-//	return noDoc;
-//}
-
 public rel[loc, loc] allCommentsInProject() = myModel.documentation;
 
 // This module contains all the data that can be used for analysis.

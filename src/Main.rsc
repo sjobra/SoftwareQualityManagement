@@ -6,6 +6,8 @@ import ProjectReader;
 import LinesOfCode;
 import MethodVolume;
 import Duplication;
+import CyclomaticComplexity;
+import Utilities;
 
 public void main()
 {
@@ -17,19 +19,28 @@ public void main()
 	println("unit size");
 	cuv();
 	println("unit complexity");
-	println("simple");
-	println("moderate");
-	println("high");
-	println("very high");
+	calculateCyclomaticComplexity();
+	printEvalCC();
 	println("duplication:");
+	// Quick version without Calculation
 	as();
 	
+	
+	// Slow version with calculation
+	// println(<duplication()>);
 	int duplPercentage = getPercentage();
 	//duplication();
+	
+	int rankingLoc = rankingLOC(linesOfCode);
+	determineRanking(rankingLoc);
 	rankingLOC(linesOfCode);
+	
 	println("unit size score: +");
-	println("unit complexity score: +/-");
-	rankingDuplication(duplPercentage);
+	determineComplexity();
+	
+	int rankingDupl = rankingDuplication(duplPercentage);
+	determineRanking(rankingDupl);
+	
 	println("");
 	println("analysability score: +");
 	println("changability score: -");

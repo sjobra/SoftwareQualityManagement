@@ -123,16 +123,16 @@ public void as(){
 
 }
 
-public void rankingDuplication(int percentage) {
+public int rankingDuplication(int percentage) {
 	if(percentage <= 3)
-		println("duplication score: ++");
+		return 4;
 	elseif(percentage > 3 && percentage <= 5)
-		println("duplication score: +");
+		return 3;
 	elseif(percentage > 5 && percentage <= 10)
-		println("duplication score: o");
+		return 2;
 	elseif(percentage > 10 && percentage <= 20)
-		println("duplication score: -");
-	else println("duplication score: --");
+		return 1;
+	else return 0;
 }
 
 public int getPercentage()
