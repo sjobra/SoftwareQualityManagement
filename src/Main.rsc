@@ -8,6 +8,7 @@ import MethodVolume;
 import Duplication;
 import CyclomaticComplexity;
 import Utilities;
+import Maintainability;
 
 public void main()
 {
@@ -16,35 +17,48 @@ public void main()
 	int linesOfCode = getLinesOfCodeProgram();
 	println("lines of code : <linesOfCode>"  );
 	println("number of units: <getTotalAmountOfMethods()>");
+	
 	println("unit size");
-	cuv();
+	map[str, real] volumeResults = cuv();
+	printVolume(volumeResults);
+	
 	println("unit complexity");
-	calculateCyclomaticComplexity();
-	printEvalCC();
-	println("duplication:");
+	list[tuple[loc, str, int, int]] CC = calculateCyclomaticComplexity();
+	printEvalCC(CC);
+	
 	// Quick version without Calculation
-	as();
-	
-	
+	//as();
 	// Slow version with calculation
 	// println(<duplication()>);
 	int duplPercentage = getPercentage();
-	//duplication();
+	duplication();
+	println("");
 	
+	// Evaluation Part
 	int rankingLoc = rankingLOC(linesOfCode);
-	determineRanking(rankingLoc);
-	rankingLOC(linesOfCode);
+	println("volume score: <determineRanking(rankingLoc)>");
 	
-	println("unit size score: +");
-	determineComplexity();
+	int rankingVol = rankingVolume(volumeResults);
+	println("unit size score: <determineRanking(rankingVol)>");
+	
+	int rankingComp = rankingComplexity(CC);
+	println("unit complexity score: <determineRanking(rankingComp)>");
 	
 	int rankingDupl = rankingDuplication(duplPercentage);
-	determineRanking(rankingDupl);
+	println("duplication score: <determineRanking(rankingDupl)>");
+	println("");
 	
+	// Maintainability Characteristics
+	int analysability = getAnalysability(rankingVol, rankingDupl, rankingLoc);
+	println("analysability score: <determineRanking(analysability)>" );
+	
+	int changability = getChangability(rankingComp, rankingDupl);
+	println("changability score: <determineRanking(changability)>");
+	
+	int testability = getTestability(rankingComp, rankingLoc);
+	println("testability score: <determineRanking(testability)>");
 	println("");
-	println("analysability score: +");
-	println("changability score: -");
-	println("testability score: ++");
-	println("");
-	println("overall maintainability score: ++");
+	
+	int maintainability = getMaintainability(analysability, changability, testability);
+	println("overall maintainability score: <determineRanking(maintainability)>");
 }

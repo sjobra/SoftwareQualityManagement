@@ -21,7 +21,7 @@ public list[str] filterComments(list[str] aMethod) {
 }
 
 //calculate volume
-public void cuv() {
+public map[str, real] cuv() {
 	set[loc] allMethods = methods(model);
 	real totalmethods = toReal(size(allMethods));
 	//println(totalmethods);
@@ -57,12 +57,43 @@ public void cuv() {
 		
 	}
 	//println(svm); 
-	println(" * simple: " + toString(floor((svm/totalmethods)*100)) + "%"); 
-	println(" * moderate: " + toString(floor((nvm/totalmethods)*100)) + "%"); 
-	println(" * high: " + toString(floor((hvm/totalmethods)*100)) + "%"); 
-	println(" * very high: " + toString(floor((cvm/totalmethods)*100)) + "%");
+	map[str, real] volumeResults = ( "simple": 0.0, "moderate" : 0.0, "high": 0.0, "very high": 0.0);
+	
+	volumeResults["simple"] = (svm/totalmethods)*100;
+	volumeResults["moderate"] = (nvm/totalmethods)*100;
+	volumeResults["high"] = (hvm/totalmethods)*100;
+	volumeResults["very high"] = (cvm/totalmethods)*100; 
+	
+	return volumeResults;
 }
 
+public int rankingVolume(map[str, real] volumeResults)
+{
+	// m <=25 h = 0 vh = 0;
+	if(volumeResults["moderate"] <= 25.0 && volumeResults["high"] == 0.0 && volumeResults["very high"] == 0.0)
+		return 4;
+	if(volumeResults["moderate"] <= 35.0 && volumeResults["high"] <= 5.0 && volumeResults["very high"] == 0.0)
+		return 3;
+	if(volumeResults["moderate"] <= 40.0 && volumeResults["high"] <= 10.0 && volumeResults["very high"] == 0.0)
+		return 2;
+	if(volumeResults["moderate"] <= 50.0 && volumeResults["high"] <= 15.0 && volumeResults["very high"] == 0.0)
+		return 1;
+	else
+		return 0;	
+}	
+
+public void printVolume(map[str, real] volumeResults)
+{
+	//volumeResults["simple"] = floor((svm/totalmethods)*100);
+	//volumeResults["moderate"] = floor((nvm/totalmethods)*100);
+	//volumeResults["high"] = floor((hvm/totalmethods)*100);
+	//volumeResults["very high"] = floor((cvm/totalmethods)*100); 
+							
+	println(" * simple: <floor(volumeResults["simple"])> %");
+	println(" * moderate: <floor(volumeResults["moderate"])> %");
+	println(" * high: <floor(volumeResults["high"])> %");
+	println(" * very high: <floor(volumeResults["very high"])> %");
+}
 public real getTotalAmountOfMethods()
 {
 	set[loc] allMethods = methods(model);

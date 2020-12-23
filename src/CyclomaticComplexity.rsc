@@ -8,7 +8,6 @@ import util::Resources;
 import Map;
 import util::Math;
 
-
 import ProjectReader;
 import LinesOfCode;
 import CommentHandling;
@@ -99,8 +98,11 @@ public map [str, real] calculateComplexityPercentage(map[str, int] categoryVsLoc
 	return catVsPerc;
 }
 
-public int rankingComplexity(map [str, real] catVsPerc)
-{
+public int rankingComplexity(list[tuple[loc, str, int, int]] CC)
+{	
+	map[str, int] ccInCat = riskEvalCC(CC);
+	map [str, real] catVsPerc = calculateComplexityPercentage(ccInCat);
+
 	// m <=25 h = 0 vh = 0;
 	if(catVsPerc["more complex"] <= 25.0 && catVsPerc["complex"] == 0.0 && catVsPerc["untestable"] == 0.0)
 		return 4;
@@ -114,18 +116,8 @@ public int rankingComplexity(map [str, real] catVsPerc)
 		return 0;	
 }
 
-public void determineComplexity()
-{
-	list[tuple[loc, str, int, int]] CC = calculateCyclomaticComplexity();
-	map[str, int] ccInCat = riskEvalCC(CC);
-	map [str, real] ccInPerc = calculateComplexityPercentage(ccInCat);
-	int result = rankingComplexity(ccInPerc);	
-	determineRanking(result);
-}
-
-public void printEvalCC()
-{
-	list[tuple[loc, str, int, int]] CC = calculateCyclomaticComplexity();
+public void printEvalCC(list[tuple[loc, str, int, int]] CC)
+{	
 	map[str, int] ccInCat = riskEvalCC(CC);
 	
 	int totalAmountOfMethods = 0;
