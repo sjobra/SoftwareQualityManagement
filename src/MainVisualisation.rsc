@@ -9,7 +9,9 @@ import Map;
 
 import FileHandler;
 
- map[loc, int] properties = readFileProperties(); 
+map[loc, int] properties = readFileProperties(); 
+list[tuple[loc, str, int, int]] complexity = readComplexity();
+
  
  public void main()
 {
