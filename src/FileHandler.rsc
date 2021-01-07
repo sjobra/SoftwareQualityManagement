@@ -5,8 +5,8 @@ import Set;
 import ValueIO;
 
 loc filesAndMethodsAndLOC = |file:///C:/tmp/MethodsVsLinesOfCode.txt|;
-loc complexity= |file:///C:/Complexity.txt|;
-loc maintainability = |file:///C:/maintainability.txt|;
+loc complexity= |file:///C:/tmp/Complexity.txt|;
+loc maintainability = |file:///C:tmp/maintainability.txt|;
 
 
 //Graph[str] gebruikt = {<"A", "B">, <"A", "D">, 
@@ -21,6 +21,16 @@ public void saveFileProperties(map[loc, int] fileProperties)
 public map[loc, int] readFileProperties() 
 {
 	return readTextValueFile(#map[loc, int], filesAndMethodsAndLOC);
+}
+
+public void saveComplexity(list[tuple[loc, str, int, int]] cyclComp)
+{
+	writeTextValueFile(complexity, cyclComp);
+}
+
+public list[tuple[loc, str, int, int]] readComplexity() 
+{
+	return readTextValueFile(#list[tuple[loc, str, int, int]], complexity);
 }
 
 //public void leesEnToon() {
