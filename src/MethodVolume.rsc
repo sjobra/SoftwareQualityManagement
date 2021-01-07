@@ -8,8 +8,8 @@ import analysis::graphs::Graph;
 import lang::java::jdt::m3::Core;
 import lang::java::m3::AST;
 
-
-public M3 model = createM3FromEclipseProject(|project://smallsql/|);
+import ProjectReader;
+import FileHandler;
 
 public list[str] filterComments(list[str] aMethod) {
 // this regex filters out lines starting with slashes
@@ -22,8 +22,11 @@ public list[str] filterComments(list[str] aMethod) {
 
 //calculate volume
 public map[str, real] cuv() {
-	set[loc] allMethods = methods(model);
+	set[loc] allMethods = methods(myModel);
 	real totalmethods = toReal(size(allMethods));
+	
+	map[loc, int] methodAmountOfLines = ();
+	
 	//println(totalmethods);
 	//simple volume methods
 	real svm = 0.0;
@@ -39,6 +42,8 @@ public map[str, real] cuv() {
 		list[str] aMethod = readFileLines(met);
 		//println(size(filterComments(aMethod)));
 		int lines = size(filterComments(aMethod));
+		methodAmountOfLines += (met: lines);
+		
 		if(lines < 6) {
 			svm = svm +1;
 		} else if(lines > 5 && lines < 24) {
@@ -56,6 +61,8 @@ public map[str, real] cuv() {
 //[10:42, 08/12/2020] Chu: En 50+ voor zeer complex
 		
 	}
+	
+	saveFileProperties(methodAmountOfLines);
 	//println(svm); 
 	map[str, real] volumeResults = ( "simple": 0.0, "moderate" : 0.0, "high": 0.0, "very high": 0.0);
 	
@@ -96,7 +103,7 @@ public void printVolume(map[str, real] volumeResults)
 }
 public real getTotalAmountOfMethods()
 {
-	set[loc] allMethods = methods(model);
+	set[loc] allMethods = methods(myModel);
 	return toReal(size(allMethods));
 	
 }

@@ -42,6 +42,7 @@ public rel[loc, loc] getAllMethods(M3 model)
 
 // Project that needs to be analysed
 public loc project = |project://smallsql/|;
+//ublic loc project = |project://hsqldb/|;
 
 //M3 Model created from project
 public M3 myModel = createM3FromEclipseProject(project);
@@ -59,19 +60,6 @@ public map[loc, str] getFileAndContent()
 	}
 	return fileAndContent;
 }
-
-//public map[loc, str] getFileAndContentWithoutComments()
-//{
-//	map[loc, list[str]] fileAndContent = getFileAndContent();
-//	map[loc, list[str]] fileAndContentWithoutComment = ();
-//	
-//	for(<location, content> <- toList(fileAndContent)) 
-//	{
-//		fileAndContentWithoutComment += ( location: filterComments(content));		
-//	}	
-//	return fileAndContentWithoutComment;
-//} 
-
 
 // Create a relation between files and methods containing all the methods
 public rel[loc, loc] allMethods = getAllMethods(myModel);

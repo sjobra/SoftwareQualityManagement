@@ -27,7 +27,7 @@ public map[loc, int] getMethodvsLoc(map[loc,str] methods)
 public int getLinesOfCode(str input)
 {
 	// convert string to a list of Strings by splitting it up at \r\n 
-	list[str] inputWithNewLines = split("\r\n", input);
+	list[str] inputWithNewLines = split("\n", input);
 	
 	// TODO: Remove empty Lines
 	
@@ -36,7 +36,7 @@ public int getLinesOfCode(str input)
 
 public int getLinesOfCodeProgram()
 {
-int linesOfCode = 0;
+	int linesOfCode = 0;
 	map[loc, str] fileAndContentWithoutComment = getSourceCodeWithoutComments();
 	
 	for(<location, content> <- toList(fileAndContentWithoutComment)) 

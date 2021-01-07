@@ -41,7 +41,7 @@ public int duplication() {
 		}
 	}
 	int originalSize = size(filteredmethods);
-	println(size(filteredmethods));
+//	println(size(filteredmethods));
 	
 	int daSize = size(filteredmethods);
 
@@ -81,7 +81,7 @@ public int duplication() {
 				
 				//just removing the list from filteredmethods will remove all occurances. Only need to remove current occurance
 				list[str] bottomPart = slice(filteredmethods, 0, i);				
-				println("total size: " + toString(size(filteredmethods)) + " bottomsize: " + toString(size(bottomPart)) + " duplicated lines: " + toString(detectedDuplicate));
+				//println("total size: " + toString(size(filteredmethods)) + " bottomsize: " + toString(size(bottomPart)) + " duplicated lines: " + toString(detectedDuplicate));
 				//println("toppart: " + toString(size(filteredmethods) - (size(bottomPart) + detectedDuplicate)));
 				
 				

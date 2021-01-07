@@ -30,9 +30,9 @@ public void main()
 	//as();
 	// Slow version with calculation
 	// println(<duplication()>);
-	int duplPercentage = getPercentage();
-	duplication();
-	println("");
+	//int duplPercentage = getPercentage();
+	int duplPercentage = duplication();
+	println("duplication: <duplPercentage>%");
 	
 	// Evaluation Part
 	int rankingLoc = rankingLOC(linesOfCode);

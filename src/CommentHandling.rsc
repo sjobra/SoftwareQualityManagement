@@ -86,7 +86,7 @@ public map[loc, str] getMethodAndContent(set[loc] javaMethods)
 
 public list[str] convertToArray(str input) 
 {
-	list[str] inputWithNewLines = split("\r\n", input);
+	list[str] inputWithNewLines = split("\n", input);
 	return removeBlankLines(inputWithNewLines);	
 }
 
