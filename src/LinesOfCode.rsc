@@ -1,6 +1,5 @@
 module LinesOfCode
 
-import IO;
 import Set;
 import List;
 import util::Math;
