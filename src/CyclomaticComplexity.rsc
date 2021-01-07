@@ -12,6 +12,7 @@ import ProjectReader;
 import LinesOfCode;
 import CommentHandling;
 import Utilities;
+import FileHandler;
 
 // To determine everything, alse the lines of Code per unit is needed. 
 // Lines of code needs to be filtered, so without code. 
@@ -36,6 +37,7 @@ public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 	{
 		result += <decl.src, decl.name, cyclomaticComplexity(decl), linesOfCode[decl.src]>;
 	}
+	saveComplexity(result);
 	return result;
 }
 
