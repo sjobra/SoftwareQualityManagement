@@ -47,7 +47,10 @@ public void complexityPressed()
 	Figure boxComplex = box(text("Complex"), area(complexityMatrix["complex"]),  fillColor("orange"));
 	Figure boxUntestable = box(text("Untestable"), area(complexityMatrix["untestable"]), fillColor("red"));
 	
-	t = treemap([boxSimple, boxMoreComplex, boxComplex, boxUntestable]);
-	
+	t = box(vcat([
+            	text("smallSQL Complexity"), 
+            	treemap([boxSimple, boxMoreComplex, boxComplex, boxUntestable])],
+            	shrink(0.9)), fillColor("lightblue"));
+	//render(pack([boxSimple, boxMoreComplex, boxComplex, boxUntestable]));
 	render(t);
 }
