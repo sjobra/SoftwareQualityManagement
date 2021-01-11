@@ -103,7 +103,7 @@ public void printVolume(map[str, real] volumeResults)
 }
 public real getTotalAmountOfMethods()
 {
-	set[loc] allMethods = methods(myModel);
-	return toReal(size(allMethods));
+	//set[loc] allMethods = methods(myModel);
+	return toReal(size(allJavaMethods));
 	
 }

@@ -1,6 +1,5 @@
 module CyclomaticComplexity
 
-import IO;
 import lang::java::m3::Core;
 import lang::java::m3::AST;
 import lang::java::jdt::m3::Core;
@@ -15,13 +14,15 @@ import Utilities;
 import FileHandler;
 
 // To determine everything, alse the lines of Code per unit is needed. 
-// Lines of code needs to be filtered, so without code. 
+// Lines of code needs to be filtered, so without comment. 
 
 // Location, Name of function, complexity, loc per Unit
 public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 {
+	// First get all the methods without comment
 	map[loc,str] methods = getMethodsWithoutComments();
 	
+	// Determine linesOfCode and put them in a map. 
 	map[loc, int] linesOfCode = getMethodvsLoc(methods);
 
 

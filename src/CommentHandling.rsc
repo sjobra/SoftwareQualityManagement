@@ -12,6 +12,19 @@ import String;
 
 import ProjectReader;
 
+
+
+// Create a map containing filelocation and the content of the file. 
+public map[loc, str] getMethodAndContent(set[loc] javaMethods)
+{
+	map[loc, str] fileAndContent = ();
+	for (file <- javaMethods)
+	{	
+		fileAndContent += ( file : readFile(file));
+	}
+	return fileAndContent;
+}
+
 // This function creates a map that contains the file and the location of all the comments.
 public map[str, set[loc]] getCommentsPerFile() 
 {
@@ -73,16 +86,6 @@ public map[loc, str] getMethodsWithoutComments()
 	return deleteCommentsFromSourceCode(allMethods, commentsPerFile);
 }
 
-// Create a map containing filelocation and the content of the file. 
-public map[loc, str] getMethodAndContent(set[loc] javaMethods)
-{
-	map[loc, str] fileAndContent = ();
-	for (file <- javaMethods)
-	{	
-		fileAndContent += ( file : readFile(file));
-	}
-	return fileAndContent;
-}
 
 public list[str] convertToArray(str input) 
 {
@@ -90,7 +93,4 @@ public list[str] convertToArray(str input)
 	return removeBlankLines(inputWithNewLines);	
 }
 
-
 public list[str] removeBlankLines(list[str] input) = [x | x <- input, /^\S/ := trim(x)];
-
-
