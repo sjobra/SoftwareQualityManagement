@@ -83,7 +83,7 @@ public map[str, real] cuv() {
 
 //calculate volume
 public void cuvPerFile() {
-	list[tuple[loc, str, int]] result = [];
+	list[tuple[loc location, str filename, int complexity]] result = [];
 	for(file <- javaFiles){
 		M3 m3 = createM3FromEclipseFile(file);
 		set[loc] fileMethods = methods(m3);
@@ -94,6 +94,8 @@ public void cuvPerFile() {
 		}
 		result += <file,  file.file, complexity>;
 	}
+	result = sort(result, bool(tuple[loc location, str filename, int complexity] a, tuple[loc location, str filename, int complexity] b){ return a.complexity > b.complexity; });
+	//sort(fruits, bool(str a, str b){ return size(a) > size(b); });
 	saveMethodVolumePerFile(result);
 }
 

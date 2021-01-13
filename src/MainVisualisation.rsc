@@ -5,7 +5,7 @@ import Relation;
 import vis::Figure;
 import vis::Render;
 import Map;
-
+import IO;
 
 import FileHandler;
 import CyclomaticComplexity;
@@ -41,6 +41,21 @@ public void volumePressed()
 
 public void volumeMethodPressed()
 {
+	list[tuple[loc location, str name, int complexity]] methodvolume = readMethodVolumePerFile();
+	int incr = 0;
+	int totalsize = 10;
+	list[Figure] boxes = [];
+	for(file <- methodvolume) {
+		boxes += box(shrink(file.complexity), fillColor("lightGray"));
+		totalsize = totalsize + file.complexity;
+		println(file.complexity);
+		incr = incr + 1;
+		if(incr == 4) {
+			break;
+		}
+	}
+	Figure megabox = box(hcat(boxes),  size(totalsize*2,totalsize*2), fillColor("white"));
+	render(megabox);
 }
 
 public void duplicationPressed()
