@@ -1,6 +1,7 @@
 module MethodVolume
 
 import IO;
+import ValueIO;
 import Set;
 import List;
 import util::Math;
@@ -8,8 +9,14 @@ import analysis::graphs::Graph;
 import lang::java::jdt::m3::Core;
 import lang::java::m3::AST;
 
+
 import ProjectReader;
 import FileHandler;
+
+int low = 1;
+int medium = 2;
+int high = 3;
+int complex = 4;
 
 public list[str] filterComments(list[str] aMethod) {
 // this regex filters out lines starting with slashes
@@ -59,7 +66,6 @@ public map[str, real] cuv() {
 //		[10:41, 08/12/2020] Chu: Dan 6 t/'m 23 voor normale methodes
 //[10:42, 08/12/2020] Chu: 24 t/m  50 voor complex
 //[10:42, 08/12/2020] Chu: En 50+ voor zeer complex
-		
 	}
 	
 	saveFileProperties(methodAmountOfLines);
@@ -73,6 +79,40 @@ public map[str, real] cuv() {
 	
 	return volumeResults;
 }
+
+
+//calculate volume
+public void cuvPerFile() {
+	list[tuple[loc, str, int]] result = [];
+	for(file <- javaFiles){
+		M3 m3 = createM3FromEclipseFile(file);
+		set[loc] fileMethods = methods(m3);
+		int complexity = 0;
+		for(method <- fileMethods){ 
+			complexity += getComplexity(method);
+			//print(method);
+		}
+		result += <file,  file.file, complexity>;
+	}
+	saveMethodVolumePerFile(result);
+}
+
+public int getComplexity(loc method){
+		list[str] aMethod = readFileLines(method);
+		//println(size(filterComments(aMethod)));
+		int lines = size(filterComments(aMethod));
+		map[loc, int] methodAmountOfLines = (method: lines);
+		if(lines < 6) {
+			return low;
+		} else if(lines > 5 && lines < 24) {
+			return medium;
+		} else if(lines > 23 && lines < 51) {
+			return high;
+		} else {
+			return complex;
+		}
+}
+
 
 public int rankingVolume(map[str, real] volumeResults)
 {
@@ -88,6 +128,8 @@ public int rankingVolume(map[str, real] volumeResults)
 	else
 		return 0;	
 }	
+
+
 
 public void printVolume(map[str, real] volumeResults)
 {
