@@ -7,7 +7,7 @@ loc filesAndMethodsAndLOC = |file:///C:/tmp/MethodsVsLinesOfCode.txt|;
 loc cyclComplexity= |file:///C:/tmp/CComplexity.txt|;
 loc locPerFile= |file:///C:/tmp/locPerFile.txt|;
 loc maintainability = |file:///C:tmp/maintainability.txt|;
-
+loc compPerFile = |file:///C:/tmp/fileComplexity.txt|;
 
 public map[loc, int] readFileProperties() 
 {
@@ -39,5 +39,12 @@ public void saveLocPerFile(list[tuple[str,int]] locPerJavaFile)
 	writeTextValueFile(locPerFile, locPerJavaFile);
 }
 
+public void saveComplexityPerFile(map[str, int] complexityPerFile)
+{
+	writeTextValueFile(compPerFile, complexityPerFile);
+}
 
-
+public map[str, int] readComplexityPerFile()
+{
+	readTextValueFile(#map[str, int], compPerFile);
+}

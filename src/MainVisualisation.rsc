@@ -48,9 +48,10 @@ public void volumePressed()
 }
 
 public void complexityPressed()
-{
+{	
+	complexityPerFile = readComplexityPerFile();
 	locPerFile = readLocPerFile();
-	boxes = treemap([box( id(filename), area(linesOfCode), fillColor("blue")) |
+	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename]))) |
 	<filename, linesOfCode> <- locPerFile]);
 	render(boxes);		
 }
@@ -70,6 +71,19 @@ private Figures createGraphInfo()
 			box(text("O"),fillColor("Yellow"), size(25), resizable(false)),
 			box(text("-"),fillColor("Orange"), size(25), resizable(false)),
 			box(text("--"),fillColor("Red"), size(25), resizable(false))];
+}
+
+private Color getColor(int index)
+{
+	switch(index)
+	{
+		case 4: return color("Green");
+		case 3: return color("Lightblue");
+		case 2: return color("Yellow");
+		case 1: return color("Orange");
+		case 0: return color("Red");
+		default: return color("White");
+	}
 }
 
 
