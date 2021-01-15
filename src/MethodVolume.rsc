@@ -62,7 +62,7 @@ public map[str, real] cuv() {
 		
 	}
 	
-	saveFileProperties(methodAmountOfLines);
+	//saveFileProperties(methodAmountOfLines);
 	//println(svm); 
 	map[str, real] volumeResults = ( "simple": 0.0, "moderate" : 0.0, "high": 0.0, "very high": 0.0);
 	

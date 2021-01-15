@@ -9,6 +9,7 @@ import Map;
 import String;
 
 import CommentHandling;
+import FileHandler;
 
 public map[loc, int] getMethodvsLoc(map[loc,str] methods)
 {
@@ -37,13 +38,17 @@ public int getLinesOfCodeProgram()
 {
 	int linesOfCode = 0;
 	map[loc, str] fileAndContentWithoutComment = getSourceCodeWithoutComments();
+	list[tuple[str,int]] locPerFile = [];
 	
 	for(<location, content> <- toList(fileAndContentWithoutComment)) 
 	{	
 		list[str] cleanCode = convertToArray(content);
 		linesOfCode += size(cleanCode);
+		
+		locPerFile += <location.file, size(cleanCode)>;	
 	}
 	
+	saveLocPerFile(locPerFile);
 	return linesOfCode;	
 }
 

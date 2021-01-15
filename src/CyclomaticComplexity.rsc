@@ -13,6 +13,9 @@ import CommentHandling;
 import Utilities;
 import FileHandler;
 
+
+alias Categories = tuple[int,int,int,int];
+
 // To determine everything, alse the lines of Code per unit is needed. 
 // Lines of code needs to be filtered, so without comment. 
 
@@ -24,7 +27,10 @@ public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 	
 	// Determine linesOfCode and put them in a map. 
 	map[loc, int] linesOfCode = getMethodvsLoc(methods);
-
+	saveLoc(linesOfCode);
+	
+	// Prepare map for cyclomatic complexity
+	list[tuple[loc, str, str, int, int]] cyclComp = [];
 
 	// We need the declarations to know what is happening in a method.
 	// First obtain all the declarations from the java files (Exercise 9)
@@ -37,8 +43,11 @@ public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 	for(Declaration decl <- declarationsPerMethod)
 	{
 		result += <decl.src, decl.name, cyclomaticComplexity(decl), linesOfCode[decl.src]>;
+		cyclComp += <decl.src, decl.src.file, decl.name, cyclomaticComplexity(decl), linesOfCode[decl.src]>;
 	}
-	saveComplexity(result);
+	
+	
+	saveCC(cyclComp);
 	return result;
 }
 
@@ -140,3 +149,35 @@ public void printEvalCC(list[tuple[loc, str, int, int]] CC)
 	println(" * high: "  + toString(round(riskMatrix["high"])) + "%");
 	println(" * very high: "  + toString(round(riskMatrix["very high"])) + "%");
 }
+
+public map[str, real] determineComplFile()
+{
+	// First find all the methods of the file
+	list[tuple[loc, str, str, int, int]] cyclComp = readComplexity();
+	
+	// Create map that contains complexity per file
+	map[str, tuple[Categories, int]] fileComplexity = ();
+	emptyCategories = <0,0,0,0>;
+	
+	// Fill map with filenames
+	for(entry <- cyclComp)
+	{
+		fileComplexity += ( entry[1] : <emptyCategories , 0>);
+	}
+	
+	return fileComplexity;	
+}
+
+public int rankIndividualComplexity(int CC)
+{
+	if (cc > 50)
+		return 3;
+	else if (cc>20)
+		return 2;
+	else if (cc[2] >10)
+		return 1;
+	else
+		retunr 0;	
+}
+
+
