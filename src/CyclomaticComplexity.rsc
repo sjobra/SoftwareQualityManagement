@@ -14,7 +14,7 @@ import Utilities;
 import FileHandler;
 
 
-alias Categories = tuple[int,int,int,int];
+alias Categories = tuple[int,int,int,int,int];
 
 // To determine everything, alse the lines of Code per unit is needed. 
 // Lines of code needs to be filtered, so without comment. 
@@ -150,31 +150,56 @@ public void printEvalCC(list[tuple[loc, str, int, int]] CC)
 	println(" * very high: "  + toString(round(riskMatrix["very high"])) + "%");
 }
 
-public map[str, real] determineComplFile()
+public map[str, Categories] determineComplFile()
 {
 	// First find all the methods of the file
-	list[tuple[loc, str, str, int, int]] cyclComp = readComplexity();
+	list[tuple[loc, str,  str, int, int ]] cyclComp = readComplexity();
 	
 	// Create map that contains complexity per file
-	map[str, tuple[Categories, int]] fileComplexity = ();
-	emptyCategories = <0,0,0,0>;
+	map[str, Categories] fileComplexity = ();
+	emptyCategories = <0,0,0,0,0>;
 	
 	// Fill map with filenames
 	for(entry <- cyclComp)
 	{
-		fileComplexity += ( entry[1] : <emptyCategories , 0>);
+		fileComplexity += ( entry[1] : emptyCategories);
+	}
+	
+	for(entry <- cyclComp)
+	{
+		for (<filename, category> <- toList(fileComplexity))
+		{
+			// Determine if files are the same, then fetch linesOfCode and complexity
+			if(entry[1] == filename) 
+			{
+				int methodComplexity = entry[3];
+				int linesOfCode = entry[4];
+				
+				// Determine complexity bin
+				int bin = rankIndividualComplexity(methodComplexity);
+				
+				// Put lines of code in correct bin
+				// get currentValues
+				currentCatValues = fileComplexity[filename];
+				
+				currentCatValues[bin] += linesOfCode;
+				currentCatValues[4] += linesOfCode;
+				
+				fileComplexity[filename] = currentCatValues;
+			}
+		}
 	}
 	
 	return fileComplexity;	
 }
 
-public int rankIndividualComplexity(int CC)
+public int rankIndividualComplexity(int cc)
 {
 	if (cc > 50)
 		return 3;
-	else if (cc>20)
+	else if (cc > 20)
 		return 2;
-	else if (cc[2] >10)
+	else if (cc > 10)
 		return 1;
 	else
 		return 0;	
