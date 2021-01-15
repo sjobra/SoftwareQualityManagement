@@ -46,5 +46,5 @@ public void saveComplexityPerFile(map[str, int] complexityPerFile)
 
 public map[str, int] readComplexityPerFile()
 {
-	readTextValueFile(#map[str, int], compPerFile);
+	return readTextValueFile(#map[str, int], compPerFile);
 }
