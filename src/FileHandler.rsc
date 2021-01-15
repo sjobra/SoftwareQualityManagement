@@ -8,8 +8,8 @@ loc filesAndMethodsAndLOC = |file:///C:/tmp/MethodsVsLinesOfCode.txt|;
 loc complexity = |file:///C:/tmp/Complexity.txt|;
 loc maintainability = |file:///C:tmp/maintainability.txt|;
 loc methodVolumePerFile = |file:///C:/tmp/MethodVolume.txt|;
-loc methodVolumePerMethod = |file:///C:/tmp/MethodVolume.txt|;
-loc duplication = |file:///C:/tmp/Duplication.txt|;
+//loc methodVolumePerMethod = |file:///C:/tmp/MethodVolume.txt|;
+//loc duplication = |file:///C:/tmp/Duplication.txt|;
 
 
 
@@ -46,16 +46,16 @@ public list[tuple[loc, str, int]] readMethodVolumePerFile()
 {
 	return readTextValueFile(#list[tuple[loc, str, int]], methodVolumePerFile);
 }
-
-public void saveMethodVolumePerMethod(list[tuple[loc, str, str, int]] mv)
-{
-	writeTextValueFile(methodVolumePerMethod, mv);
-}
-
-public list[tuple[loc, str, int, int]] readMethodVolumePerMethod() 
-{
-	return readTextValueFile(#list[tuple[loc, str, int, int]], methodVolumePerMethod);
-}
+//
+//public void saveMethodVolumePerMethod(list[tuple[loc, str, str, int]] mv)
+//{
+//	writeTextValueFile(methodVolumePerMethod, mv);
+//}
+//
+//public list[tuple[loc, str, int, int]] readMethodVolumePerMethod() 
+//{
+//	return readTextValueFile(#list[tuple[loc, str, int, int]], methodVolumePerMethod);
+//}
 
 //public void leesEnToon() {
 //   Graph[str] g = readTextValueFile(#Graph[str], tmp);
