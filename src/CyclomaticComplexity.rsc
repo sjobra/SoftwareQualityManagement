@@ -150,7 +150,7 @@ public void printEvalCC(list[tuple[loc, str, int, int]] CC)
 	println(" * very high: "  + toString(round(riskMatrix["very high"])) + "%");
 }
 
-public map[str, Categories] determineComplFile()
+public map[str, int] determineComplFile()
 {
 	// First find all the methods of the file
 	list[tuple[loc, str,  str, int, int ]] cyclComp = readComplexity();
@@ -159,11 +159,19 @@ public map[str, Categories] determineComplFile()
 	map[str, Categories] fileComplexity = ();
 	emptyCategories = <0,0,0,0,0>;
 	
+	// Create map for percentages
+	map[str, tuple[real,real,real,real]] percentages = ();
+	
+	map[str, int] result = ();
+	
 	// Fill map with filenames
 	for(entry <- cyclComp)
 	{
 		fileComplexity += ( entry[1] : emptyCategories);
+		percentages += ( entry[1] : <0.0, 0.0, 0.0, 0.0>);
+		result += ( entry[1] : 0 );
 	}
+	
 	
 	for(entry <- cyclComp)
 	{
@@ -190,7 +198,44 @@ public map[str, Categories] determineComplFile()
 		}
 	}
 	
-	return fileComplexity;	
+	// Now Calculate back to percentage of complexity code per bin / total lines of code
+	// Fill map with filenames
+	
+	
+	for(<filename, category> <- toList(fileComplexity))
+	{
+		binSimple = toReal(category[0]) / toReal(category[4]);
+		binMComplex = toReal(category[1]) / toReal(category[4]);
+		binComplex = toReal(category[2]) / toReal(category[4]);
+		binUntestable = toReal(category[3]) / toReal(category[4]);
+		
+		percentages[filename] = <binSimple , binMComplex, binComplex , binUntestable >;
+	}
+	
+	// Now determine the overall complexity per file
+	for(<filename, perc> <- toList(percentages))
+	{
+		if(perc[1] <= 0.25 && perc[2] == 0.0 && perc[3] == 0.0)
+		{
+			result[filename] = 4;			
+		}
+		else if(perc[1] <= 0.35 && perc[2] <= 0.05 && perc[3] == 0.0)
+		{
+			result[filename] = 3;			
+		}
+		else if(perc[1] <= 0.40 && perc[2] <= 0.10 && perc[3] == 0.0)
+		{
+			result[filename] = 2;		
+		}
+		else if(perc[1] <= 0.50 && perc[2] <= 0.15 && perc[3] == 0.0)
+		{
+			result[filename] = 1;	
+		}
+		else
+			result[filename] =  0;	
+	}	
+	saveComplexityPerFile(result);
+	return result;	
 }
 
 public int rankIndividualComplexity(int cc)
@@ -204,5 +249,3 @@ public int rankIndividualComplexity(int cc)
 	else
 		return 0;	
 }
-
-

@@ -23,14 +23,21 @@ Graph[loc] m3Graph = createGraph();
 	//Figure legend = vcat(text("Legend:") + createGraphInfo(), resizable(false));
 	//render(legend);
 	
-	Figure btnMaintainability = button("Maintainability", mainPressed, fillColor("grey"), size(150,20), resizable(false) );
-	Figure btnVolume= button("Volume", volumePressed, fillColor("grey"), size(150,20), resizable(false));
-	Figure btnMethodVol = button("Method Volume", volumeMethodPressed, fillColor("grey"), size(150,20), resizable(false));
-	Figure btnDupl= button("Duplication", duplicationPressed, fillColor("grey"), size(150,20), resizable(false));
-	Figure btnComplex= button("Complexity", complexityPressed, fillColor("grey"), size(150,20), resizable(false));
+	//Figure btnMaintainability = button("Maintainability", mainPressed, fillColor("grey"), size(150,20), resizable(false) );
+	//Figure btnVolume= button("Volume", volumePressed, fillColor("grey"), size(150,20), resizable(false));
+	//Figure btnMethodVol = button("Method Volume", volumeMethodPressed, fillColor("grey"), size(150,20), resizable(false));
+	//Figure btnDupl= button("Duplication", duplicationPressed, fillColor("grey"), size(150,20), resizable(false));
+	//Figure btnComplex= button("Complexity", complexityPressed, fillColor("grey"), size(150,20), resizable(false));
 	
-	render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex], gap(20),  resizable(false)));
+	//render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex], gap(20),  resizable(false)));
+	complexityPerFile = readComplexityPerFile();
+	locPerFile = readLocPerFile();
+	int sizaA = size(complexityPerFile);
+	int sizeB = size(locPerFile);
 	
+	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename]))) |
+	<filename, linesOfCode> <- locPerFile]);
+	render(boxes);	
 	
 	
 	//render(vcat([btnMaintainability, btnVolume, btnComplex], gap(20),  resizable(false)));
