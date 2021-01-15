@@ -177,7 +177,7 @@ public int rankIndividualComplexity(int CC)
 	else if (cc[2] >10)
 		return 1;
 	else
-		retunr 0;	
+		return 0;	
 }
 
 
