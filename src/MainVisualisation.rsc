@@ -99,8 +99,21 @@ public FProperty popup(str info)
 
 public void renderFile(str fileName)
 {
+	// Load all complexity...
+	list[tuple[loc place, str file, str met, int cc, int linesOfCode]] complexity = readComplexity();
+	list[tuple[str file, str met, int cc, int linesOfCode]] filteredComplexity = [];
+	 
+	for (complItem <- complexity)
+	{
+		if(complItem.file == fileName)
+		{
+		 	filteredComplexity += < complItem.file, complItem.met, complItem.cc, complItem.linesOfCode >;
+		}
+	}
 	
-
+	boxes = treemap([box( id(met), area(linesOfCode), fillColor(getColor(cc)), popup(met)) |
+	<filename, met, cc, linesOfCode> <- filteredComplexity]);
+	render(boxes);	
 }
 
 
