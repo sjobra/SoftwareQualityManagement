@@ -6,6 +6,8 @@ import lang::java::jdt::m3::Core;
 import util::Resources;
 import Map;
 import util::Math;
+import Set;
+import String;
 
 import ProjectReader;
 import LinesOfCode;
@@ -29,6 +31,8 @@ public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 	map[loc, int] linesOfCode = getMethodvsLoc(methods);
 	saveLoc(linesOfCode);
 	
+	map[str,int] locPerFile = readLocPerFile();
+	
 	// Prepare map for cyclomatic complexity
 	list[tuple[loc, str, str, int, int]] cyclComp = [];
 
@@ -36,14 +40,24 @@ public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 	// First obtain all the declarations from the java files (Exercise 9)
 	set[Declaration] declarationsPerFile = {createAstFromFile(file, false) | file <- getJavaFiles(project)};
 	
-	// Now we can get the declarationsPerMethod by looking per file
-	set[Declaration] declarationsPerMethod = { d | /Declaration d := declarationsPerFile, d	is method || d is constructor }; 
-	
 	list[tuple[loc, str, int, int]] result =[];
-	for(Declaration decl <- declarationsPerMethod)
+	for(Declaration decl <- declarationsPerFile)
 	{
-		result += <decl.src, decl.name, cyclomaticComplexity(decl), linesOfCode[decl.src]>;
-		cyclComp += <decl.src, decl.src.file, decl.name, cyclomaticComplexity(decl), linesOfCode[decl.src]>;
+		// Now we can get the declarationsPerMethod by looking per file
+		set[Declaration] declarationsPerMethod = { d | /Declaration d := decl, d	is method || d is constructor }; 	
+		if(isEmpty(declarationsPerMethod))
+		{
+			result += <decl.src, "", 0, locPerFile[decl.src.file]>;
+			cyclComp += <decl.src, decl.src.file, "", 0, locPerFile[decl.src.file]>;
+		}
+		else 
+		{
+			for(Declaration declMethod <- declarationsPerMethod)
+			{
+				result += <declMethod.src, declMethod.name, cyclomaticComplexity(declMethod), linesOfCode[declMethod.src]>;
+				cyclComp += <declMethod.src, declMethod.src.file, declMethod.name, cyclomaticComplexity(declMethod), linesOfCode[declMethod.src]>;
+			}
+		}
 	}
 	
 	

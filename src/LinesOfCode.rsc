@@ -38,14 +38,14 @@ public int getLinesOfCodeProgram()
 {
 	int linesOfCode = 0;
 	map[loc, str] fileAndContentWithoutComment = getSourceCodeWithoutComments();
-	list[tuple[str,int]] locPerFile = [];
+	map[str,int] locPerFile = ();
 	
 	for(<location, content> <- toList(fileAndContentWithoutComment)) 
 	{	
 		list[str] cleanCode = convertToArray(content);
 		linesOfCode += size(cleanCode);
 		
-		locPerFile += <location.file, size(cleanCode)>;	
+		locPerFile[location.file] = size(cleanCode);	
 	}
 	
 	saveLocPerFile(locPerFile);

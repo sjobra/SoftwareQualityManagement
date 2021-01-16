@@ -31,12 +31,12 @@ Graph[loc] m3Graph = createGraph();
 	
 	//render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex], gap(20),  resizable(false)));
 	complexityPerFile = readComplexityPerFile();
-	locPerFile = readLocPerFile();
+	map[str,int] locPerFile = readLocPerFile();
 	int sizaA = size(complexityPerFile);
 	int sizeB = size(locPerFile);
 	
 	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename]))) |
-	<filename, linesOfCode> <- locPerFile]);
+	<filename, linesOfCode> <- toList(locPerFile)]);
 	render(boxes);	
 	
 	

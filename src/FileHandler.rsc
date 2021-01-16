@@ -29,12 +29,12 @@ public void saveLoc(map[loc, int] linesOfCode)
 	writeTextValueFile(filesAndMethodsAndLOC, linesOfCode);
 }
 
-public list[tuple[str,int]] readLocPerFile()
+public map[str,int] readLocPerFile()
 {
-	return readTextValueFile(#list[tuple[str,int]], locPerFile);
+	return readTextValueFile(#map[str,int], locPerFile);
 }
 
-public void saveLocPerFile(list[tuple[str,int]] locPerJavaFile)
+public void saveLocPerFile(map[str,int] locPerJavaFile)
 {
 	writeTextValueFile(locPerFile, locPerJavaFile);
 }
