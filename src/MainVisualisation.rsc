@@ -5,6 +5,7 @@ import lang::java::jdt::m3::Core;
 import Relation;
 import vis::Figure;
 import vis::Render;
+import vis::KeySym;
 import Map;
 import List;
 import Set;
@@ -20,24 +21,15 @@ Graph[loc] m3Graph = createGraph();
  public void main()
 {
 	// Create Main menu
-	//Figure legend = vcat(text("Legend:") + createGraphInfo(), resizable(false));
-	//render(legend);
 	
-	//Figure btnMaintainability = button("Maintainability", mainPressed, fillColor("grey"), size(150,20), resizable(false) );
-	//Figure btnVolume= button("Volume", volumePressed, fillColor("grey"), size(150,20), resizable(false));
-	//Figure btnMethodVol = button("Method Volume", volumeMethodPressed, fillColor("grey"), size(150,20), resizable(false));
-	//Figure btnDupl= button("Duplication", duplicationPressed, fillColor("grey"), size(150,20), resizable(false));
-	//Figure btnComplex= button("Complexity", complexityPressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnMaintainability = button("Maintainability", mainPressed, fillColor("grey"), size(150,20), resizable(false) );
+	Figure btnVolume= button("Volume", volumePressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnMethodVol = button("Method Volume", volumeMethodPressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnDupl= button("Duplication", duplicationPressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnComplex= button("Complexity", complexityPressed, fillColor("grey"), size(150,20), resizable(false));
 	
-	//render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex], gap(20),  resizable(false)));
-	complexityPerFile = readComplexityPerFile();
-	map[str,int] locPerFile = readLocPerFile();
-	int sizaA = size(complexityPerFile);
-	int sizeB = size(locPerFile);
-	
-	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename]))) |
-	<filename, linesOfCode> <- toList(locPerFile)]);
-	render(boxes);	
+	render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex], gap(20),  resizable(false)));
+		
 	
 	
 	//render(vcat([btnMaintainability, btnVolume, btnComplex], gap(20),  resizable(false)));
@@ -57,10 +49,17 @@ public void volumePressed()
 public void complexityPressed()
 {	
 	complexityPerFile = readComplexityPerFile();
-	locPerFile = readLocPerFile();
-	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename]))) |
-	<filename, linesOfCode> <- locPerFile]);
-	render(boxes);		
+	map[str,int] locPerFile = readLocPerFile();
+	int sizaA = size(complexityPerFile);
+	int sizeB = size(locPerFile);
+	
+	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename])), popup(filename), onMouseDown(bool (int butnr, map[KeyModifier, bool] modifiers){
+							renderFile(filename);
+				return true;
+				})
+				) |
+	<filename, linesOfCode> <- toList(locPerFile)]);
+	render(boxes);	
 }
 
 public void volumeMethodPressed()
@@ -93,5 +92,15 @@ private Color getColor(int index)
 	}
 }
 
+public FProperty popup(str info)
+{
+	return mouseOver(box(text(info), fillColor("lightyellow"), grow(1.2), resizable(false)));
+}
+
+public void renderFile(str fileName)
+{
+	
+
+}
 
 
