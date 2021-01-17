@@ -91,11 +91,11 @@ public FProperty clickMethodVolumeMethod(loc file, loc location, str name) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if(butnr == 1) {
 			list[str] aMethod = readFileLines(location);
-			list[Figure] lines = [];
 			str aline = "";
+			incr = 1;
 			for(line <- aMethod){
-				aline = aline + line + "\n";
-				lines += text(line, halign(0.0));
+				aline = aline + toString(incr) + "  " +  line + "\n";
+				incr = incr + 1;
 			}
 			Figure toRender = box(text(aline), align(0, 0), area(100), fillColor("white"),clickMethodVolumeMethodReturn(file, name));
 			
