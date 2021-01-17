@@ -7,7 +7,7 @@ loc filesAndMethodsAndLOC = |file:///C:/tmp/MethodsVsLinesOfCode.txt|;
 loc complexity = |file:///C:/tmp/Complexity.txt|;
 loc maintainability = |file:///C:tmp/maintainability.txt|;
 loc methodVolumePerFile = |file:///C:/tmp/MethodVolume.txt|;
-//loc duplication = |file:///C:/tmp/Duplication.txt|;
+loc duplication = |file:///C:/tmp/Duplication.txt|;
 loc cyclComplexity= |file:///C:/tmp/CComplexity.txt|;
 loc locPerFile= |file:///C:/tmp/locPerFile.txt|;
 loc compPerFile = |file:///C:/tmp/fileComplexity.txt|;
@@ -51,16 +51,17 @@ public list[tuple[loc, str, int, int]] readMethodVolumePerFile()
 {
 	return readTextValueFile(#list[tuple[loc, str, int, int]], methodVolumePerFile);
 }
-//
-//public void saveMethodVolumePerMethod(list[tuple[loc, str, str, int]] mv)
-//{
-//	writeTextValueFile(methodVolumePerMethod, mv);
-//}
-//
-//public list[tuple[loc, str, int, int]] readMethodVolumePerMethod() 
-//{
-//	return readTextValueFile(#list[tuple[loc, str, int, int]], methodVolumePerMethod);
-//}
+
+
+public void saveDuplication(list[set[loc]] d)
+{
+	writeTextValueFile(duplication, d);
+}
+
+public list[set[loc]] readDuplication() 
+{
+	return readTextValueFile(#list[set[loc]], duplication);
+}
 
 
 public void saveComplexityPerFile(map[str, int] complexityPerFile)

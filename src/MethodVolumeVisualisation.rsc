@@ -35,7 +35,9 @@ public void volumeMethodPressed() {
 	
 	for(file <- methodvolume) {
 		str filename = replaceAll(file.name, ".java","");
-		boxes += box(text(toString(file.complexity)),area(file.methodCount), getColor(file.highestComplexity), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
+		//this part adds a box to the treegrid. It shows the number of methods, the color is displayed depending on the highest complexity within that class.
+		//it shows the file name as popup and when clicked it will go to that class so one can see an overview of it's methods and the complexity therein.
+		boxes += box(text(toString(file.methodCount)),area(file.methodCount), getColor(file.highestComplexity), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
 		incr = incr + 1;
 	}
 	t = treemap(boxes);
