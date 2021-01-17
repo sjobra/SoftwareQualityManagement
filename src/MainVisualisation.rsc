@@ -21,11 +21,11 @@ import CyclomaticComplexity;
 import MethodVolume;
 import MethodVolumeVisualisation;
 import DuplicationVisualization;
+import CCVisualisation;
 
 bool COLORBLINDMODE = false;
 
-map[str, int] complexityPerFile = readComplexityPerFile();
-map[str,int] locPerFile = readLocPerFile();
+
  
  public void main()
 {
@@ -68,36 +68,6 @@ public void setColorBlindMode(bool state)
 	COLORBLINDMODE = state;
 }
 
-
-public void complexityPressed()
-{	
-	list[Figure] boxlist = [];
-	for(<filename, linesOfCode> <- toList(locPerFile))
-	{
-		newFile = filename;
-		boxlist += box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename])), popup(filename), handleMouseEvent(newFile));
-	}
-	boxes = treemap(boxlist);
-	
-	image = box(vcat([text("Complexity"), createGraphInfo(), boxes], vgrow(1.1)));
-	render(image);	
-}
-
-public FProperty handleMouseEvent(str filename)
-{
-	return onMouseDown(bool(int butnr,map[KeyModifier, bool] modifiers)
-	{
-		if (butnr == 3)
-		{
-			mainMenu();
-		}
-		else
-		{
-			renderFile(filename);
-		}
-		return true;
-	});
-}
 
 public Figure createGraphInfo() 
 {
@@ -146,25 +116,7 @@ public FProperty popup(str info)
 	return mouseOver(box(text(info), fillColor("lightyellow"), grow(1.2), resizable(false)));
 }
 
-public void renderFile(str fileName)
-{
-	// Load all complexity...
-	list[tuple[loc place, str file, str met, int cc, int linesOfCode]] complexity = readComplexity();
-	list[tuple[str file, str met, int cc, int linesOfCode]] filteredComplexity = [];
-	 
-	for (complItem <- complexity)
-	{
-		if(complItem.file == fileName)
-		{
-		 	filteredComplexity += < complItem.file, complItem.met, complItem.cc, complItem.linesOfCode >;
-		}
-	}
-	
-	boxes = treemap([box( id(met), area(linesOfCode), fillColor(getColor(RankCC(cc))), popup(met), handleMouseEventComplexity()) |
-	<filename, met, cc, linesOfCode> <- filteredComplexity]);
-	image = box(vcat([text(fileName), createInfo(), boxes], vgrow(1.1)));
-	render(image);
-}
+
 
 public Figure createInfo() 
 {
@@ -176,24 +128,4 @@ public Figure createInfo()
 			]);
 }
 
-public int RankCC(int cc)
-{
-	if (cc <= 10)
-		return 4;
-	if (cc<=20)
-		return 2;
-	if (cc<=50)
-		return 1;
-	else return 0;		
-}
-public FProperty handleMouseEventComplexity()
-{
-	return onMouseDown(bool(int butnr,map[KeyModifier, bool] modifiers)
-	{
-		if (butnr == 3)
-		{
-			complexityPressed();
-		}
-		return true;
-	});
-}
+
