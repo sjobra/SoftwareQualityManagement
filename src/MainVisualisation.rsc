@@ -30,12 +30,11 @@ map[str,int] locPerFile = readLocPerFile();
 public void mainMenu()
 {
 	Figure btnMaintainability = button("Maintainability", mainPressed, buttonProperties() );
-	Figure btnVolume = button("Volume", volumePressed, fillColor("lightgrey"), size(150,20), resizable(false));
-	Figure btnMethodVol = button("Method Volume", volumeMethodPressed, fillColor("lightgrey"), size(150,20), resizable(false));
-	Figure btnDupl = button("Duplication", duplicationPressed, fillColor("lightgrey"), size(150,20), resizable(false));
-	Figure btnComplex = button("Complexity", complexityPressed, fillColor("lightgrey"), size(150,20), resizable(false));
-	//Figure btnColorBlind = checkbox("ColorBlind Mode", void(bool s){COLORBLINDMODE = s;});
-	
+	Figure btnVolume = button("Volume", volumePressed, buttonProperties());
+	Figure btnMethodVol = button("Method Volume", volumeMethodPressed, buttonProperties());
+	Figure btnDupl = button("Duplication", duplicationPressed, buttonProperties());
+	Figure btnComplex = button("Complexity", complexityPressed, buttonProperties());
+		
 	render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex, btnColorBlind()], gap(20),  resizable(false)));	
 }
 
@@ -50,9 +49,19 @@ list[FProperty] buttonProperties()
 
 public void mainPressed()
 {
+	
 }
 
 public void volumePressed()
+{
+}
+
+public void volumeMethodPressed()
+{
+}
+
+
+public void duplicationPressed()
 {
 }
 
@@ -86,15 +95,6 @@ public FProperty handleMouseEvent(str filename)
 		}
 		return true;
 	});
-}
-
-
-public void volumeMethodPressed()
-{
-}
-
-public void duplicationPressed()
-{
 }
 
 private Figure createGraphInfo() 
