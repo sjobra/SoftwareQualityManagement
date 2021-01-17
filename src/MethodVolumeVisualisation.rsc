@@ -44,18 +44,6 @@ public void volumeMethodPressed() {
 	render(image);
 }
 
-//public FProperty getColor(int complexity){ 
-//	FProperty color = fillColor("red");
-//	if(complexity == 1) {
-//		color = fillColor("green");
-//	} else if(complexity == 2) {
-//		color = fillColor("DarkGreen");
-//	} else if(complexity == 3) {
-//		color = fillColor("Crimson");
-//	}
-//	return color;
-//}
-
 public FProperty clickMethodVolumeFile(loc location, str filename) {
 //public FProperty click(loc loca, str filename) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
@@ -93,8 +81,7 @@ public void volumeMethodFile(loc location, str name) {
 			}
 			boxes += box(text(met.file),area(10), fillColor(getColor(ccolor)), clickMethodVolumeMethod(location, met, name));
 		}
-	
-	render(vcat(boxes));
+	render(vcat((boxes), vgrow(1.1)));
 }
 
 
