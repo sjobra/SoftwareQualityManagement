@@ -36,24 +36,25 @@ public void volumeMethodPressed() {
 		str filename = replaceAll(file.name, ".java","");
 		//this part adds a box to the treegrid. It shows the number of methods, the color is displayed depending on the highest complexity within that class.
 		//it shows the file name as popup and when clicked it will go to that class so one can see an overview of it's methods and the complexity therein.
-		boxes += box(text(toString(file.methodCount)),area(file.methodCount), getColor(file.highestComplexity), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
+		boxes += box(text(toString(file.methodCount)),area(file.methodCount), fillColor(getColor(file.highestComplexity)), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
 		incr = incr + 1;
 	}
 	t = treemap(boxes);
-	render(t);
+	image = box(vcat([text("Volume"), createInfo(), t], vgrow(1.1)));
+	render(image);
 }
 
-public FProperty getColor(int complexity){ 
-	FProperty color = fillColor("red");
-	if(complexity == 1) {
-		color = fillColor("green");
-	} else if(complexity == 2) {
-		color = fillColor("DarkGreen");
-	} else if(complexity == 3) {
-		color = fillColor("Crimson");
-	}
-	return color;
-}
+//public FProperty getColor(int complexity){ 
+//	FProperty color = fillColor("red");
+//	if(complexity == 1) {
+//		color = fillColor("green");
+//	} else if(complexity == 2) {
+//		color = fillColor("DarkGreen");
+//	} else if(complexity == 3) {
+//		color = fillColor("Crimson");
+//	}
+//	return color;
+//}
 
 public FProperty clickMethodVolumeFile(loc location, str filename) {
 //public FProperty click(loc loca, str filename) {
@@ -82,15 +83,15 @@ public void volumeMethodFile(loc location, str name) {
 	
 	for(met <- fileMethods){ 
 			int complexity = getComplexity(met);
-			FProperty color = fillColor("red");
+			ccolor = 0;
 			if(complexity == 1) {
-				color = fillColor("green");
+				ccolor = 4;
 			} else if(complexity == 2) {
-				color = fillColor("DarkGreen");
+				ccolor = 2;
 			} else if(complexity == 3) {
-				color = fillColor("Crimson");
+				ccolor = 1;
 			}
-			boxes += box(text(met.file),area(10), color, clickMethodVolumeMethod(location, met, name));
+			boxes += box(text(met.file),area(10), fillColor(getColor(ccolor)), clickMethodVolumeMethod(location, met, name));
 		}
 	
 	render(vcat(boxes));
