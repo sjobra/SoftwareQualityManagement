@@ -13,29 +13,27 @@ import Set;
 import ProjectReader;
 import FileHandler;
 import CyclomaticComplexity;
-import GraphNode;
 
-//map[loc, int] properties = readFileProperties(); 
-Graph[loc] m3Graph = createGraph();
+bool COLORBLINDMODE = false;
  
  public void main()
 {
 	// Create Main menu
+	mainMenu();	
+}
 	
+
+
+public void mainMenu()
+{
 	Figure btnMaintainability = button("Maintainability", mainPressed, fillColor("grey"), size(150,20), resizable(false) );
-	Figure btnVolume= button("Volume", volumePressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnVolume = button("Volume", volumePressed, fillColor("grey"), size(150,20), resizable(false));
 	Figure btnMethodVol = button("Method Volume", volumeMethodPressed, fillColor("grey"), size(150,20), resizable(false));
-	Figure btnDupl= button("Duplication", duplicationPressed, fillColor("grey"), size(150,20), resizable(false));
-	Figure btnComplex= button("Complexity", complexityPressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnDupl = button("Duplication", duplicationPressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnComplex = button("Complexity", complexityPressed, fillColor("grey"), size(150,20), resizable(false));
+	Figure btnColorBlind = checkbox("ColorBlind Mode", void(bool s){COLORBLINDMODE = s;});
 	
-	render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex], gap(20),  resizable(false)));
-		
-	
-	
-	//render(vcat([btnMaintainability, btnVolume, btnComplex], gap(20),  resizable(false)));
-	
-	//Figure treeMapProperties = treemap([box(text(name.file), area(amountOfLines), fillColor(arbColor())) | <name, amountOfLines> <- toRel(properties)]);
-	//render("SmallSql", treeMapProperties);
+	render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex, btnColorBlind], gap(20),  resizable(false)));	
 }
 
 public void mainPressed()
@@ -46,21 +44,39 @@ public void volumePressed()
 {
 }
 
+public void setColorBlindMode(bool state)
+{
+	COLORBLINDMODE = state;
+}
+
+
 public void complexityPressed()
 {	
 	complexityPerFile = readComplexityPerFile();
 	map[str,int] locPerFile = readLocPerFile();
-	int sizaA = size(complexityPerFile);
-	int sizeB = size(locPerFile);
 	
-	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename])), popup(filename), onMouseDown(bool (int butnr, map[KeyModifier, bool] modifiers){
-							renderFile(filename);
-				return true;
-				})
-				) |
+	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename])), popup(filename), handleMouseEvent(filename))|
 	<filename, linesOfCode> <- toList(locPerFile)]);
-	render(boxes);	
+	image = box(vcat([text("Complexity"), createGraphInfo(), boxes], vgrow(1.1)));
+	render(image);	
 }
+
+public FProperty handleMouseEvent(str filename)
+{
+	return onMouseDown(bool(int butnr,map[KeyModifier, bool] modifiers)
+	{
+		if (butnr == 3)
+		{
+			mainMenu();
+		}
+		else
+		{
+			renderFile(filename);
+		}
+		return true;
+	});
+}
+
 
 public void volumeMethodPressed()
 {
@@ -70,13 +86,13 @@ public void duplicationPressed()
 {
 }
 
-private Figures createGraphInfo() 
+private Figure createGraphInfo() 
 {
-	return [box(text("++"),fillColor("Green"), size(25), resizable(false)),
+	return hcat([box(text("++"),fillColor("Green"), size(25), resizable(false)),
 			box(text("+"), fillColor("Lightblue"), size(25), resizable(false)),
 			box(text("O"),fillColor("Yellow"), size(25), resizable(false)),
 			box(text("-"),fillColor("Orange"), size(25), resizable(false)),
-			box(text("--"),fillColor("Red"), size(25), resizable(false))];
+			box(text("--"),fillColor("Red"), size(25), resizable(false))]);
 }
 
 private Color getColor(int index)
@@ -115,5 +131,3 @@ public void renderFile(str fileName)
 	<filename, met, cc, linesOfCode> <- filteredComplexity]);
 	render(boxes);	
 }
-
-
