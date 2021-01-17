@@ -41,7 +41,8 @@ public void duplicationPressed() {
 		boxes += duplicates;//box(duplicates, fillColor("Black"));
 	}
 	t = treemap(boxes);
-	render(t);
+	image = box(vcat([text("Duplication"), t], vgrow(1.1)));
+	render(image);
 }
 
 
