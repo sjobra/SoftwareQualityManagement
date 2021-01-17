@@ -2,20 +2,23 @@ module MainVisualisation
 
 import analysis::graphs::Graph;
 import Relation;
+import String;
 import vis::Figure;
 import vis::Render;
+import vis::KeySym;
 import List;
 import Map;
 import IO;
 import util::Math;
+import lang::java::jdt::m3::Core;
+import lang::java::m3::AST;
+
 
 import FileHandler;
 import CyclomaticComplexity;
+import MethodVolume;
+import VisualisationHelperMethods;
 
-//map[loc, int] properties = readFileProperties(); 
-
-
- 
  public void main()
 {
 	// Create Main menu
@@ -39,39 +42,6 @@ public void mainPressed()
 
 public void volumePressed()
 {
-}
-
-public void volumeMethodPressed()
-{
-	list[tuple[loc location, str name, int complexity]] methodvolume = readMethodVolumePerFile();
-	list[tuple[loc location, str name, int complexity]]  biggestMethods = take(6, methodvolume);
-	int maxsize = sum(biggestMethods.complexity);
-	int totalsize = sum(methodvolume.complexity);
-	
-	int incr = 0;
-	int batchSize = 0;
-	list[Figure] vertical = [];
-	
-	list[Figure] boxes = [];
-	
-	for(file <- methodvolume) {
-		batchSize = batchSize + file.complexity;
-		if(batchSize > maxsize) {
-			vertical += hcat(boxes);
-			boxes = [];
-			batchSize=0;
-		}
-		boxes += box(text(file.name, fontSize(12), fontColor("blue")), area(file.complexity), fillColor("white"));
-	}
-	if(size(boxes) != 0) {
-		vertical += hcat(boxes);
-	}
-	Figure megabox = box(vcat(vertical),  area(totalsize*2), fillColor("white"));
-	render(megabox);
-}
-
-public real calculateBoxSize(int boxsize, int maxSize) {
-	return toReal(boxsize)/toReal(maxSize);
 }
 
 public void duplicationPressed()

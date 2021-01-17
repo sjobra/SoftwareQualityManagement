@@ -92,16 +92,18 @@ public void cuvPerFile() {
 			complexity += getComplexity(method);
 			//print(method);
 		}
-		result += <file,  file.file, complexity>;
+		if(complexity > 0) {
+			result += <file,  file.file, complexity>;
+		}
 	}
 	result = sort(result, bool(tuple[loc location, str filename, int complexity] a, tuple[loc location, str filename, int complexity] b){ return a.complexity > b.complexity; });
 	//sort(fruits, bool(str a, str b){ return size(a) > size(b); });
 	saveMethodVolumePerFile(result);
 }
 
+
 public int getComplexity(loc method){
 		list[str] aMethod = readFileLines(method);
-		//println(size(filterComments(aMethod)));
 		int lines = size(filterComments(aMethod));
 		map[loc, int] methodAmountOfLines = (method: lines);
 		if(lines < 6) {
