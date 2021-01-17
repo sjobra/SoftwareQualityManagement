@@ -36,7 +36,7 @@ public void volumeMethodPressed() {
 		str filename = replaceAll(file.name, ".java","");
 		//this part adds a box to the treegrid. It shows the number of methods, the color is displayed depending on the highest complexity within that class.
 		//it shows the file name as popup and when clicked it will go to that class so one can see an overview of it's methods and the complexity therein.
-		boxes += box(text(toString(file.methodCount)),area(file.methodCount), fillColor(getColor(file.highestComplexity)), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
+		boxes += box(text(toString(file.methodCount)),area(file.methodCount), fillColor(getColor(getComplexityColor(file.highestComplexity))), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
 		incr = incr + 1;
 	}
 	t = treemap(boxes);
@@ -56,12 +56,6 @@ public FProperty clickMethodVolumeFile(loc location, str filename) {
     });
 }
 
-
-public FProperty popup(str S){
- return mouseOver(box(text(S), fillColor("lightyellow"),
- grow(1.2),resizable(false)));
-}
-
 public void volumeMethodFile(loc location, str name) {
 	M3 m3 = createM3FromEclipseFile(location);
 	set[loc] fileMethods = methods(m3);
@@ -74,7 +68,7 @@ public void volumeMethodFile(loc location, str name) {
 			ccolor = 0;
 			if(complexity == 1) {
 				ccolor = 4;
-			} else if(complexity == 2) {
+ 			} else if(complexity == 2) {
 				ccolor = 2;
 			} else if(complexity == 3) {
 				ccolor = 1;
@@ -114,7 +108,20 @@ public FProperty clickMethodVolumeMethodReturn(loc file, str filename) {
 			volumeMethodFile(file, filename);
 		}
     	return true;	
-    });
+    });    
+}
+
+public int getComplexityColor(int complexity)
+{
+	ccolor = 0;
+	if(complexity == 1) {
+		ccolor = 4;
+	} else if(complexity == 2) {
+		ccolor = 2;
+	} else if(complexity == 3) {
+		ccolor = 1;
+	}
+	return ccolor;
 }
 
 
