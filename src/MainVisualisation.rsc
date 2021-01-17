@@ -36,13 +36,13 @@ map[str,int] locPerFile = readLocPerFile();
 
 public void mainMenu()
 {
-	Figure btnMaintainability = button("Maintainability", mainPressed, buttonProperties() );
-	Figure btnVolume = button("Volume", volumePressed, buttonProperties());
+	//Figure btnMaintainability = button("Maintainability", mainPressed, buttonProperties() );
+	//Figure btnVolume = button("Volume", volumePressed, buttonProperties());
 	Figure btnMethodVol = button("Method Volume", volumeMethodPressed, buttonProperties());
 	Figure btnDupl = button("Duplication", duplicationPressed, buttonProperties());
 	Figure btnComplex = button("Complexity", complexityPressed, buttonProperties());
 		
-	render(vcat([btnMaintainability, btnVolume, btnMethodVol, btnDupl, btnComplex, btnColorBlind()], gap(20),  resizable(false)));	
+	render(vcat([btnMethodVol, btnDupl, btnComplex, btnColorBlind()], gap(20),  resizable(false)));	
 }
 
 public Figure btnColorBlind(){
@@ -99,7 +99,7 @@ public FProperty handleMouseEvent(str filename)
 	});
 }
 
-private Figure createGraphInfo() 
+public Figure createGraphInfo() 
 {
 	return hcat([
 			box(text("++"), fillColor(getColor(4)), size(25), resizable(false)),
@@ -110,7 +110,7 @@ private Figure createGraphInfo()
 			]);
 }
 
-private Color getColor(int index)
+public Color getColor(int index)
 {
 	if(COLORBLINDMODE)
 	{
@@ -162,11 +162,11 @@ public void renderFile(str fileName)
 	
 	boxes = treemap([box( id(met), area(linesOfCode), fillColor(getColor(RankCC(cc))), popup(met), handleMouseEventComplexity()) |
 	<filename, met, cc, linesOfCode> <- filteredComplexity]);
-	image = box(vcat([text(fileName), createCCInfo(), boxes], vgrow(1.1)));
+	image = box(vcat([text(fileName), createInfo(), boxes], vgrow(1.1)));
 	render(image);
 }
 
-private Figure createCCInfo() 
+public Figure createInfo() 
 {
 	return hcat([
 			box(text("Simple"), fillColor(getColor(4)), size(25), resizable(false)),
