@@ -2,7 +2,6 @@ module MainVisualisation
 
 import analysis::graphs::Graph;
 import lang::java::jdt::m3::Core;
-import Relation;
 import String;
 import vis::Figure;
 import vis::Render;
@@ -20,7 +19,7 @@ import ProjectReader;
 import FileHandler;
 import CyclomaticComplexity;
 import MethodVolume;
-import VisualisationHelperMethods;
+import MethodVolumeVisualisation;
 
 bool COLORBLINDMODE = false;
 

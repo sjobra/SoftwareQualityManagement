@@ -1,4 +1,4 @@
-module VisualisationHelperMethods
+module MethodVolumeVisualisation
 
 import analysis::graphs::Graph;
 import Relation;
@@ -12,7 +12,6 @@ import IO;
 import util::Math;
 import lang::java::jdt::m3::Core;
 import lang::java::m3::AST;
-import util::Editors;
 import IO;
 
 import ValueIO;
@@ -24,12 +23,11 @@ import analysis::graphs::Graph;
 import FileHandler;
 import CyclomaticComplexity;
 import MethodVolume;
-import VisualisationHelperMethods;
 import MainVisualisation;
 
 
 public void volumeMethodPressed() {
-	list[tuple[loc location, str name, int complexity]] methodvolume = readMethodVolumePerFile();
+	list[tuple[loc location, str name, int methodCount, int highestComplexity]] methodvolume = readMethodVolumePerFile();
 	
 	list[Figure] boxes = [];
 	
@@ -37,11 +35,23 @@ public void volumeMethodPressed() {
 	
 	for(file <- methodvolume) {
 		str filename = replaceAll(file.name, ".java","");
-		boxes += box(text(toString(file.complexity)),area(file.complexity),fillColor("white"), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
+		boxes += box(text(toString(file.complexity)),area(file.methodCount), getColor(file.highestComplexity), popup(file.name), clickMethodVolumeFile(file.location, file.name));	
 		incr = incr + 1;
 	}
 	t = treemap(boxes);
 	render(t);
+}
+
+public FProperty getColor(int complexity){ 
+	FProperty color = fillColor("red");
+	if(complexity == 1) {
+		color = fillColor("green");
+	} else if(complexity == 2) {
+		color = fillColor("DarkGreen");
+	} else if(complexity == 3) {
+		color = fillColor("Crimson");
+	}
+	return color;
 }
 
 public FProperty clickMethodVolumeFile(loc location, str filename) {
@@ -50,7 +60,7 @@ public FProperty clickMethodVolumeFile(loc location, str filename) {
 		if(butnr == 1) {
 			volumeMethodFile(location, filename);
 		} else if(butnr == 3) {
-			main();
+			mainMenu();
 		}
     	return true;	
     });

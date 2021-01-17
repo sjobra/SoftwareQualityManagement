@@ -81,26 +81,44 @@ public map[str, real] cuv() {
 }
 
 
-//calculate volume
+//calculate volume and save it for visualisaiton purposes
 public void cuvPerFile() {
-	list[tuple[loc location, str filename, int complexity]] result = [];
+	list[tuple[loc location, str filename, int complexity, int highestComplexity]] result = [];
 	for(file <- javaFiles){
 		M3 m3 = createM3FromEclipseFile(file);
 		set[loc] fileMethods = methods(m3);
-		int complexity = 0;
+		int methodCount = size(fileMethods);
+		int highestComplexity = 1;
 		for(method <- fileMethods){ 
-			complexity += getComplexity(method);
-			//print(method);
+			int instanceComplexity = getComplexity(method);
+			if(instanceComplexity > highestComplexity) {
+				highestComplexity = instanceComplexity;
+			}
 		}
-		if(complexity > 0) {
-			result += <file,  file.file, complexity>;
+		//No need to add a class with no methods
+		if(methodCount > 0) {
+			result += <file,  file.file, methodCount, highestComplexity>;
 		}
 	}
-	result = sort(result, bool(tuple[loc location, str filename, int complexity] a, tuple[loc location, str filename, int complexity] b){ return a.complexity > b.complexity; });
-	//sort(fruits, bool(str a, str b){ return size(a) > size(b); });
+	result = sort(result, bool(tuple[loc location, str filename, int methodCount, int highestComplexity] a, tuple[loc location, str filename, int methodCount, int highestComplexity] b){ return a.methodCount > b.methodCount; });
 	saveMethodVolumePerFile(result);
 }
 
+public int getHighestComplexity(loc file) {
+	M3 m3 = createM3FromEclipseFile(file);
+	set[loc] fileMethods = methods(m3);
+	int complexity = 1;
+	for(met <- fileMethods){ 
+		int contendor = getComplexity(met);
+			if(contendor == 4) {
+				return contendor;
+			}
+			if(contendor > complexity) {
+				complexity = contendor;
+			}
+		}
+	return complexity;
+}
 
 public int getComplexity(loc method){
 		list[str] aMethod = readFileLines(method);

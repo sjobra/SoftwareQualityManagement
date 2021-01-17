@@ -42,14 +42,14 @@ public void saveLocPerFile(map[str,int] locPerJavaFile)
 	writeTextValueFile(locPerFile, locPerJavaFile);
 }
 
-public void saveMethodVolumePerFile(list[tuple[loc, str, int]] mv)
+public void saveMethodVolumePerFile(list[tuple[loc, str, int, int]] mv)
 {
 	writeTextValueFile(methodVolumePerFile, mv);
 }
 
-public list[tuple[loc, str, int]] readMethodVolumePerFile() 
+public list[tuple[loc, str, int, int]] readMethodVolumePerFile() 
 {
-	return readTextValueFile(#list[tuple[loc, str, int]], methodVolumePerFile);
+	return readTextValueFile(#list[tuple[loc, str, int, int]], methodVolumePerFile);
 }
 //
 //public void saveMethodVolumePerMethod(list[tuple[loc, str, str, int]] mv)
