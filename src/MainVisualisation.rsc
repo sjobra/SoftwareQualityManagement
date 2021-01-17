@@ -73,10 +73,14 @@ public void setColorBlindMode(bool state)
 
 public void complexityPressed()
 {	
+	list[Figure] boxlist = [];
+	for(<filename, linesOfCode> <- toList(locPerFile))
+	{
+		newFile = filename;
+		boxlist += box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename])), popup(filename), handleMouseEvent(newFile));
+	}
+	boxes = treemap(boxlist);
 	
-	
-	boxes = treemap([box( id(filename), area(linesOfCode), fillColor(getColor(complexityPerFile[filename])), popup(filename), handleMouseEvent(filename))|
-	<filename, linesOfCode> <- toList(locPerFile)]);
 	image = box(vcat([text("Complexity"), createGraphInfo(), boxes], vgrow(1.1)));
 	render(image);	
 }
@@ -158,7 +162,40 @@ public void renderFile(str fileName)
 		}
 	}
 	
-	boxes = treemap([box( id(met), area(linesOfCode), fillColor(getColor(cc)), popup(met)) |
+	boxes = treemap([box( id(met), area(linesOfCode), fillColor(getColor(RankCC(cc))), popup(met), handleMouseEventComplexity()) |
 	<filename, met, cc, linesOfCode> <- filteredComplexity]);
-	render(boxes);	
+	image = box(vcat([text(fileName), createCCInfo(), boxes], vgrow(1.1)));
+	render(image);
+}
+
+private Figure createCCInfo() 
+{
+	return hcat([
+			box(text("Simple"), fillColor(getColor(4)), size(25), resizable(false)),
+			box(text("More Complex"), fillColor(getColor(2)), size(25), resizable(false)),
+			box(text("Complex"), fillColor(getColor(1)), size(25), resizable(false)),
+			box(text("Untestable"), fillColor(getColor(0)), size(25), resizable(false))
+			]);
+}
+
+public int RankCC(int cc)
+{
+	if (cc <= 10)
+		return 4;
+	if (cc<=20)
+		return 2;
+	if (cc<=50)
+		return 1;
+	else return 0;		
+}
+public FProperty handleMouseEventComplexity()
+{
+	return onMouseDown(bool(int butnr,map[KeyModifier, bool] modifiers)
+	{
+		if (butnr == 3)
+		{
+			complexityPressed();
+		}
+		return true;
+	});
 }
