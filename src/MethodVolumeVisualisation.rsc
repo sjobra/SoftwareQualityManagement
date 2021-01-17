@@ -21,7 +21,6 @@ import analysis::graphs::Graph;
 
 
 import FileHandler;
-import CyclomaticComplexity;
 import MethodVolume;
 import MainVisualisation;
 

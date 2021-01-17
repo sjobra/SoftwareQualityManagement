@@ -20,6 +20,7 @@ import FileHandler;
 import CyclomaticComplexity;
 import MethodVolume;
 import MethodVolumeVisualisation;
+import DuplicationVisualization;
 
 bool COLORBLINDMODE = false;
 
@@ -61,12 +62,6 @@ public void mainPressed()
 public void volumePressed()
 {
 }
-
-
-public void duplicationPressed()
-{
-}
-
 
 public void setColorBlindMode(bool state)
 {
