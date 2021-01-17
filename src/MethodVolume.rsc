@@ -68,7 +68,7 @@ public map[str, real] cuv() {
 //[10:42, 08/12/2020] Chu: En 50+ voor zeer complex
 	}
 	
-	saveFileProperties(methodAmountOfLines);
+	//saveFileProperties(methodAmountOfLines);
 	//println(svm); 
 	map[str, real] volumeResults = ( "simple": 0.0, "moderate" : 0.0, "high": 0.0, "very high": 0.0);
 	

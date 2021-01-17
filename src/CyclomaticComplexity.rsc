@@ -6,12 +6,17 @@ import lang::java::jdt::m3::Core;
 import util::Resources;
 import Map;
 import util::Math;
+import Set;
+import String;
 
 import ProjectReader;
 import LinesOfCode;
 import CommentHandling;
 import Utilities;
 import FileHandler;
+
+
+alias Categories = tuple[int,int,int,int,int];
 
 // To determine everything, alse the lines of Code per unit is needed. 
 // Lines of code needs to be filtered, so without comment. 
@@ -24,21 +29,39 @@ public list[tuple[loc, str, int, int]] calculateCyclomaticComplexity()
 	
 	// Determine linesOfCode and put them in a map. 
 	map[loc, int] linesOfCode = getMethodvsLoc(methods);
-
+	saveLoc(linesOfCode);
+	
+	map[str,int] locPerFile = readLocPerFile();
+	
+	// Prepare map for cyclomatic complexity
+	list[tuple[loc, str, str, int, int]] cyclComp = [];
 
 	// We need the declarations to know what is happening in a method.
 	// First obtain all the declarations from the java files (Exercise 9)
 	set[Declaration] declarationsPerFile = {createAstFromFile(file, false) | file <- getJavaFiles(project)};
 	
-	// Now we can get the declarationsPerMethod by looking per file
-	set[Declaration] declarationsPerMethod = { d | /Declaration d := declarationsPerFile, d	is method || d is constructor }; 
-	
 	list[tuple[loc, str, int, int]] result =[];
-	for(Declaration decl <- declarationsPerMethod)
+	for(Declaration decl <- declarationsPerFile)
 	{
-		result += <decl.src, decl.name, cyclomaticComplexity(decl), linesOfCode[decl.src]>;
+		// Now we can get the declarationsPerMethod by looking per file
+		set[Declaration] declarationsPerMethod = { d | /Declaration d := decl, d	is method || d is constructor }; 	
+		if(isEmpty(declarationsPerMethod))
+		{
+			result += <decl.src, "", 0, locPerFile[decl.src.file]>;
+			cyclComp += <decl.src, decl.src.file, "", 0, locPerFile[decl.src.file]>;
+		}
+		else 
+		{
+			for(Declaration declMethod <- declarationsPerMethod)
+			{
+				result += <declMethod.src, declMethod.name, cyclomaticComplexity(declMethod), linesOfCode[declMethod.src]>;
+				cyclComp += <declMethod.src, declMethod.src.file, declMethod.name, cyclomaticComplexity(declMethod), linesOfCode[declMethod.src]>;
+			}
+		}
 	}
-	saveComplexity(result);
+	
+	
+	saveCC(cyclComp);
 	return result;
 }
 
@@ -139,4 +162,104 @@ public void printEvalCC(list[tuple[loc, str, int, int]] CC)
 	println(" * moderate: "  + toString(round(riskMatrix["moderate"])) + "%");
 	println(" * high: "  + toString(round(riskMatrix["high"])) + "%");
 	println(" * very high: "  + toString(round(riskMatrix["very high"])) + "%");
+}
+
+public map[str, int] determineComplFile()
+{
+	// First find all the methods of the file
+	list[tuple[loc, str,  str, int, int ]] cyclComp = readComplexity();
+	
+	// Create map that contains complexity per file
+	map[str, Categories] fileComplexity = ();
+	emptyCategories = <0,0,0,0,0>;
+	
+	// Create map for percentages
+	map[str, tuple[real,real,real,real]] percentages = ();
+	
+	map[str, int] result = ();
+	
+	// Fill map with filenames
+	for(entry <- cyclComp)
+	{
+		fileComplexity += ( entry[1] : emptyCategories);
+		percentages += ( entry[1] : <0.0, 0.0, 0.0, 0.0>);
+		result += ( entry[1] : 0 );
+	}
+	
+	
+	for(entry <- cyclComp)
+	{
+		for (<filename, category> <- toList(fileComplexity))
+		{
+			// Determine if files are the same, then fetch linesOfCode and complexity
+			if(entry[1] == filename) 
+			{
+				int methodComplexity = entry[3];
+				int linesOfCode = entry[4];
+				
+				// Determine complexity bin
+				int bin = rankIndividualComplexity(methodComplexity);
+				
+				// Put lines of code in correct bin
+				// get currentValues
+				currentCatValues = fileComplexity[filename];
+				
+				currentCatValues[bin] += linesOfCode;
+				currentCatValues[4] += linesOfCode;
+				
+				fileComplexity[filename] = currentCatValues;
+			}
+		}
+	}
+	
+	// Now Calculate back to percentage of complexity code per bin / total lines of code
+	// Fill map with filenames
+	
+	
+	for(<filename, category> <- toList(fileComplexity))
+	{
+		binSimple = toReal(category[0]) / toReal(category[4]);
+		binMComplex = toReal(category[1]) / toReal(category[4]);
+		binComplex = toReal(category[2]) / toReal(category[4]);
+		binUntestable = toReal(category[3]) / toReal(category[4]);
+		
+		percentages[filename] = <binSimple , binMComplex, binComplex , binUntestable >;
+	}
+	
+	// Now determine the overall complexity per file
+	for(<filename, perc> <- toList(percentages))
+	{
+		if(perc[1] <= 0.25 && perc[2] == 0.0 && perc[3] == 0.0)
+		{
+			result[filename] = 4;			
+		}
+		else if(perc[1] <= 0.35 && perc[2] <= 0.05 && perc[3] == 0.0)
+		{
+			result[filename] = 3;			
+		}
+		else if(perc[1] <= 0.40 && perc[2] <= 0.10 && perc[3] == 0.0)
+		{
+			result[filename] = 2;		
+		}
+		else if(perc[1] <= 0.50 && perc[2] <= 0.15 && perc[3] == 0.0)
+		{
+			result[filename] = 1;	
+		}
+		else
+			result[filename] =  0;	
+	}	
+	saveComplexityPerFile(result);
+	return result;	
+}
+
+public int rankIndividualComplexity(int cc)
+{
+	if (cc > 50)
+		return 3;
+	else if (cc > 20)
+		return 2;
+	else if (cc > 10)
+		return 1;
+	else
+		return 0;	
 }

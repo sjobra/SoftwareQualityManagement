@@ -1,40 +1,45 @@
 module FileHandler
 
 import IO;
-import Set;
 import ValueIO;
 
 loc filesAndMethodsAndLOC = |file:///C:/tmp/MethodsVsLinesOfCode.txt|;
 loc complexity = |file:///C:/tmp/Complexity.txt|;
 loc maintainability = |file:///C:tmp/maintainability.txt|;
 loc methodVolumePerFile = |file:///C:/tmp/MethodVolume.txt|;
-//loc methodVolumePerMethod = |file:///C:/tmp/MethodVolume.txt|;
 //loc duplication = |file:///C:/tmp/Duplication.txt|;
-
-
-
-//Graph[str] gebruikt = {<"A", "B">, <"A", "D">, 
-//   <"B", "D">, <"B", "E">, <"C", "B">, <"C", "E">, 
-//   <"C", "F">, <"E", "D">, <"E", "F">};
-   
-public void saveFileProperties(map[loc, int] fileProperties) 
-{
-   writeTextValueFile(filesAndMethodsAndLOC, fileProperties);
-}
+loc cyclComplexity= |file:///C:/tmp/CComplexity.txt|;
+loc locPerFile= |file:///C:/tmp/locPerFile.txt|;
+loc compPerFile = |file:///C:/tmp/fileComplexity.txt|;
 
 public map[loc, int] readFileProperties() 
 {
 	return readTextValueFile(#map[loc, int], filesAndMethodsAndLOC);
 }
 
-public void saveComplexity(list[tuple[loc, str, int, int]] cyclComp)
+public list[tuple[loc, str, str, int, int]] readComplexity() 
 {
-	writeTextValueFile(complexity, cyclComp);
+	return readTextValueFile(#list[tuple[loc, str, str, int, int]], cyclComplexity);
 }
 
-public list[tuple[loc, str, int, int]] readComplexity() 
+public void saveCC(list[tuple[loc, str, str, int, int]] cyclComplex)
 {
-	return readTextValueFile(#list[tuple[loc, str, int, int]], complexity);
+	writeTextValueFile(cyclComplexity, cyclComplex);
+}
+
+public void saveLoc(map[loc, int] linesOfCode)
+{
+	writeTextValueFile(filesAndMethodsAndLOC, linesOfCode);
+}
+
+public map[str,int] readLocPerFile()
+{
+	return readTextValueFile(#map[str,int], locPerFile);
+}
+
+public void saveLocPerFile(map[str,int] locPerJavaFile)
+{
+	writeTextValueFile(locPerFile, locPerJavaFile);
 }
 
 public void saveMethodVolumePerFile(list[tuple[loc, str, int]] mv)
@@ -57,8 +62,13 @@ public list[tuple[loc, str, int]] readMethodVolumePerFile()
 //	return readTextValueFile(#list[tuple[loc, str, int, int]], methodVolumePerMethod);
 //}
 
-//public void leesEnToon() {
-//   Graph[str] g = readTextValueFile(#Graph[str], tmp);
-//  println("ingelezen: <g>");
-//   println("grootte: <size(g)>");
-//}
+
+public void saveComplexityPerFile(map[str, int] complexityPerFile)
+{
+	writeTextValueFile(compPerFile, complexityPerFile);
+}
+
+public map[str, int] readComplexityPerFile()
+{
+	return readTextValueFile(#map[str, int], compPerFile);
+}
